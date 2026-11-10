@@ -13,7 +13,7 @@
     }
   ],
   "bound_files": {
-    "app/tests/test_agents.py": "9a20d5ce43929ca6ac982979ce253c937b36b2f6d3830367f23eb2a0f19015bf"
+    "app/tests/test_agents.py": "c6842245d07d8c6cc6e6404055a651a99e94bf88585b03187f48e3a2bea998e5"
   },
   "results": {
     "app/tests/test_agents.py::SubmitTests.test_a_block_that_repeats_the_message_is_refused": "pass"
@@ -27,8 +27,8 @@
   },
   "problems": [],
   "status": "pass",
-  "spec_sha256": "18fa82886b67ff7b7f9ad273cbb40f012a139eb6d9a1d7ee2bfc6e23e91e64eb",
-  "source_tree_sha256": "956bb4b9cbe7fb5e0e154e9c365ddc76ff88a79625e4d9a6382090a478d14368",
+  "spec_sha256": "c5cad4c1b4c28c89e5267021d365d76182fa39c2a3cf3ce5e01b3da51c9f1d74",
+  "source_tree_sha256": "978d075995a341c7271e49e7efa9998e90e821dc27eb8a2066eb882386fd0e7f",
   "raw_output_sha256": "65ec4d5c70ea9f315e184d5d05dd1b31498f71cb9c7fcd8cbeff3814b5b45848",
-  "executed_at": "2026-11-10T15:21:33.835486+00:00"
+  "executed_at": "2026-11-10T15:42:49.055551+00:00"
 }

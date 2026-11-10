@@ -1,15 +1,50 @@
 # Spec: knowledge/components/aeion-engine.md
 """The engine's boundaries: names never become paths unchecked, Markdown never emits unsafe HTML, the
-server refuses foreign hosts and cross-site writes, and nothing it returns carries the key."""
+server answers this machine only, refuses foreign hosts, cross-site writes and unbounded bodies, and
+nothing it returns carries the key."""
 import http.client
 import json
+import os
+import secrets
+import socket
 import threading
 import unittest
 from http.server import ThreadingHTTPServer
+from unittest import mock
 
 from support import Workspace
-from aeion import markdown, server
+from aeion import agents, config, llm, markdown, server
 from aeion.store import StoreError
+
+
+def start(app, setup=None):
+    """The app's server on a free loopback port; `setup` may rewrite each request's peer address."""
+    members = {"app": app} | ({"setup": setup} if setup else {})
+    httpd = ThreadingHTTPServer(("127.0.0.1", 0), type("TestHandler", (server.Handler,), members))
+    threading.Thread(target=httpd.serve_forever, daemon=True).start()
+    return httpd, httpd.server_address[1]
+
+
+def raw_status(port, head):
+    """Send raw request bytes and return the status code, for headers http.client would correct."""
+    with socket.create_connection(("127.0.0.1", port), timeout=10) as connection:
+        connection.sendall(head)
+        return int(connection.recv(65536).split(b" ", 2)[1])
+
+
+def write_head(port, length, body=b"{}"):
+    return (f"POST /api/features HTTP/1.1\r\nHost: 127.0.0.1:{port}\r\nX-Aeion: 1\r\nContent-Type: application/json\r\n"
+            f"Content-Length: {length}\r\n\r\n").encode() + body
+
+
+class ConfigTests(unittest.TestCase):
+    def test_the_server_refuses_a_host_off_loopback(self):
+        for host in ("0.0.0.0", "192.168.1.29", "::", "example.com", ""):
+            with mock.patch.dict(os.environ, {"AEION_HOST": host}), self.assertRaises(config.ConfigError, msg=host):
+                config.load()
+        for host in ("127.0.0.1", "127.0.0.2", "::1", "localhost"):
+            with mock.patch.dict(os.environ, {"AEION_HOST": host}):
+                self.assertEqual(config.load().host, host)
 
 
 class StoreTests(unittest.TestCase):
@@ -48,11 +83,8 @@ class ServerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.ws = Workspace()
-        app = server.App(cls.ws.settings, client=cls.ws.agents)
-        handler = type("TestHandler", (server.Handler,), {"app": app})
-        cls.httpd = ThreadingHTTPServer(("127.0.0.1", 0), handler)
-        threading.Thread(target=cls.httpd.serve_forever, daemon=True).start()
-        cls.port = cls.httpd.server_address[1]
+        cls.app = server.App(cls.ws.settings, client=cls.ws.agents)
+        cls.httpd, cls.port = start(cls.app)
 
     @classmethod
     def tearDownClass(cls):
@@ -92,6 +124,58 @@ class ServerTests(unittest.TestCase):
         status, _, body = self.request("GET", "/api/sessions/does-not-exist")
         self.assertEqual(status, 404)
         self.assertNotIn("Traceback", body.decode())
+
+    def test_a_peer_on_another_machine_is_refused(self):
+        def setup(handler):
+            server.Handler.setup(handler)
+            handler.client_address = ("192.168.1.29", 50000)
+        httpd, port = start(self.app, setup)
+        try:
+            self.assertEqual(raw_status(port, f"GET /api/status HTTP/1.1\r\nHost: localhost\r\n\r\n".encode()), 403)
+            feature = b'{"markdown": "# From the network"}'
+            self.assertEqual(raw_status(port, write_head(port, len(feature), feature)), 403)
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
+        self.assertEqual(self.ws.store.features(), [])
+
+    def test_a_body_length_that_is_not_a_bounded_number_is_refused(self):
+        self.assertEqual(raw_status(self.port, write_head(self.port, -1)), 400)
+        self.assertEqual(raw_status(self.port, write_head(self.port, "abc")), 400)
+        self.assertEqual(raw_status(self.port, write_head(self.port, 3 * 1024 * 1024)), 413)
+        self.assertEqual(self.ws.store.features(), [])
+
+
+class KeyTests(unittest.TestCase):
+    def test_no_response_carries_the_key(self):
+        sentinel = "sk-sentinel-" + secrets.token_hex(12)
+        ws = Workspace()
+        with mock.patch.dict(os.environ, {"OPENCODE_API_KEY": sentinel}):
+            client = agents.Agents(ws.settings, llm.Meter())
+        self.assertEqual(client._key, sentinel)  # the real client holds the key, so its absence below means something
+        httpd, port = start(server.App(ws.settings, client=client))
+        try:
+            seen = []
+            for path in ("/", "/static/app.js", "/api/status", "/api/sessions", "/api/sessions/nope", "/api/features",
+                         "/api/features/nope", "/api/catalog", "/api/studio", "/api/studio/nope", "/api/docs/tree",
+                         "/api/docs/search?q=key", "/api/docs/page?root=x&path=y", "/api/nope"):
+                connection = http.client.HTTPConnection("127.0.0.1", port, timeout=10)
+                connection.request("GET", path, headers={"Host": f"127.0.0.1:{port}"})
+                response = connection.getresponse()
+                seen.append((path, response.status, str(response.getheaders()) + response.read().decode()))
+            for path, body in (("/api/docs/ask", {}), ("/api/features", {"title": "x"}), ("/api/nope", {})):
+                connection = http.client.HTTPConnection("127.0.0.1", port, timeout=10)
+                connection.request("POST", path, body=json.dumps(body), headers={"Host": f"127.0.0.1:{port}", "X-Aeion": "1",
+                                                                                 "Content-Type": "application/json"})
+                response = connection.getresponse()
+                seen.append((path, response.status, str(response.getheaders()) + response.read().decode()))
+        finally:
+            httpd.shutdown()
+            httpd.server_close()
+            ws.close()
+        self.assertEqual(len(seen), 17)
+        for path, status, text in seen:
+            self.assertNotIn(sentinel, text, f"{path} ({status})")
 
 
 if __name__ == "__main__":

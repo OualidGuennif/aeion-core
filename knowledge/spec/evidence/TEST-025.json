@@ -13,7 +13,7 @@
     }
   ],
   "bound_files": {
-    "app/tests/test_engine.py": "d46cc78a12ed30810b57f4ef5231f745fbce2ab78b46eb6b099ebfc9a0be7558"
+    "app/tests/test_engine.py": "75024816c28b451ca72d9ea83e99cffdd0b318ac400ff289ed92b6710768c7d3"
   },
   "results": {
     "app/tests/test_engine.py::StoreTests.test_a_saved_feature_reads_back_with_its_metadata": "pass"
@@ -27,8 +27,8 @@
   },
   "problems": [],
   "status": "pass",
-  "spec_sha256": "18fa82886b67ff7b7f9ad273cbb40f012a139eb6d9a1d7ee2bfc6e23e91e64eb",
-  "source_tree_sha256": "956bb4b9cbe7fb5e0e154e9c365ddc76ff88a79625e4d9a6382090a478d14368",
+  "spec_sha256": "c5cad4c1b4c28c89e5267021d365d76182fa39c2a3cf3ce5e01b3da51c9f1d74",
+  "source_tree_sha256": "978d075995a341c7271e49e7efa9998e90e821dc27eb8a2066eb882386fd0e7f",
   "raw_output_sha256": "49861f62324e847b633823ef2cec4cab2a40b1ac01c89bc171228b3dc9678229",
-  "executed_at": "2026-11-10T15:21:31.034001+00:00"
+  "executed_at": "2026-11-10T15:42:46.321970+00:00"
 }

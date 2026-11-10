@@ -5,9 +5,11 @@ owner, then exported as the eight-section Markdown that aeion-observability buil
 
 The analyst agent drafts a fragment with local keys; code assigns IDs and edges. Every submission is
 merged into a scratch copy and checked by the same gates before it is accepted, so the agent fixes what
-it can before the owner sees it. No agent answers a decision, approves, or writes a file: decisions,
+it can before the owner sees it; a patch that still fails is not applied, and nothing `axiom check`
+would refuse is ever saved. No agent answers a decision, approves, or writes a file: decisions,
 approval and export are the owner's acts."""
 import copy
+import functools
 import hashlib
 import json
 import re
@@ -16,7 +18,9 @@ from pathlib import Path
 
 import docs as axdocs
 import spec as axspec
+import strict as axstrict
 import views as axviews
+from schema import Validator
 from .agents import Submit, ToolRefused, streaming
 from .store import StoreError, now
 
@@ -169,8 +173,38 @@ def _load(store, session):
     return json.loads(_spec_path(store, session).read_text(encoding="utf-8"))
 
 
+def _commit_blockers(raw):
+    """What `axiom check` refuses a commit for (strict JSON, schema, references, BCIR), keyed so two versions compare."""
+    result = axspec.Result()
+    try:
+        value = axstrict.loads(raw)
+    except axstrict.InputError as error:
+        return {("G01", error.code, None, ""): error.message}
+    for pointer, message in axspec.schema_validator().errors(value)[:50]:
+        result.add("G01", "error", "SCHEMA", message, pointer=pointer)
+    if not result.diagnostics:
+        axspec.validate(value, result=result)
+    return {(d["gate"], d["code"], d["subject_id"], d["pointer"] if d["gate"] == "G01" else ""): d["message"]
+            for d in result.diagnostics if d["gate"] in ("G01", "G02", "G03") and d["status"] == "error"
+            or d["gate"] == "G02" and d["status"] == "fail" and d["code"] != "EMPTY_BASELINE"}
+
+
 def _save_spec(store, session, spec):
-    store.write(_spec_path(store, session), json.dumps(spec, indent=2, ensure_ascii=False) + "\n")
+    """Writes the product specification only when it adds nothing `axiom check` would refuse; else nothing is written."""
+    path = _spec_path(store, session)
+    try:
+        raw = (json.dumps(spec, indent=2, ensure_ascii=False) + "\n").encode("utf-8")
+    except UnicodeEncodeError:
+        raise StoreError("refused: the specification holds text that is not valid Unicode; nothing was saved") from None
+    added = _commit_blockers(raw)
+    for key in (_commit_blockers(path.read_bytes()) if path.is_file() else {}):
+        added.pop(key, None)
+    if added:
+        (gate, code, subject, pointer), message = sorted(added.items(), key=str)[0]
+        where = f" on {subject}" if subject else f" at {pointer}" if pointer else ""
+        raise StoreError(f"refused: saving would break the product specification ({gate} {code}{where}: {message}); "
+                         "nothing was saved")
+    store.write(path, raw.decode("utf-8"))
 
 
 def _next(spec, prefix):
@@ -396,12 +430,15 @@ def evaluate(settings, session, spec):
     for pointer, message in axspec.schema_validator().errors(value)[:20]:
         result.add("G01", "error", "SCHEMA", message, pointer=pointer)
     model = None
-    if not result.diagnostics:
+    # The other gates run only on a schema-valid spec; when G01 fails they did not run, so they are unknown.
+    schema_failed = bool(result.diagnostics)
+    if not schema_failed:
         model, _ = axspec.validate(value, result=result)
     mine = set(session["nodes"])
     scoped = [d for d in result.diagnostics if d["gate"] == "G01" or d["subject_id"] in mine
               or (d["subject_id"] is None and d["code"] != "EMPTY_BASELINE")]
-    gates = {g: max([d["status"] for d in scoped if d["gate"] == g], key=axspec.SEVERITY.get, default="pass")
+    gates = {g: max([d["status"] for d in scoped if d["gate"] == g], key=axspec.SEVERITY.get,
+                    default="unknown" if schema_failed and g != "G01" else "pass")
              for g in axspec.DESIGN_GATES}
     issues, preview = export_issues(settings, session, model)
     return {"at": now(), "gates": gates, "diagnostics": scoped, "export": issues,
@@ -672,12 +709,13 @@ def change(store, client, settings, name, instruction="", emit=lambda e: None, t
         # Apply to scratch copies and report what still fails, so the agent repairs its own patch.
         trial_spec, trial_session = copy.deepcopy(spec), copy.deepcopy(session)
         applied = apply_patch(trial_spec, trial_session, patch, settings.model)
+        invalid = [f"{item}: the value does not fit the AxiomSpec schema for this field" for item in applied["invalid"]]
         if not (applied["updated"] + applied["added"] + applied["dropped"] + applied["export"]):
-            return [f"the patch changes nothing the studio can edit ({', '.join(applied['ignored'][:6]) or 'empty'})"]
+            return invalid or [f"the patch changes nothing the studio can edit ({', '.join(applied['ignored'][:6]) or 'empty'})"]
         after = fixable(evaluate(settings, trial_session, trial_spec), trial_session.get("keys"))
         # New failures, plus the targeted check when it still fails (its code and subject in the message).
         aimed = [p for p in after if target and target[0] in p and (not target[1] or target[1] in p)]
-        return [p for p in after if p not in before] + [p for p in aimed if p in before]
+        return invalid + [p for p in after if p not in before] + [p for p in aimed if p in before]
     blocks = _context(session, spec)
     if session["messages"]:
         lines = [f"{'Owner' if m['role'] == 'user' else 'Analyst'}: {m['content']}" for m in session["messages"][-12:]]
@@ -688,6 +726,15 @@ def change(store, client, settings, name, instruction="", emit=lambda e: None, t
                         submits=[Submit("submit_patch", PATCH, check=trial)], require="submit_patch",
                         session=name, **streaming(emit))
     value = result.submissions["submit_patch"]
+    # A patch that still fails its checks when its attempts run out is not applied: the specification stays as it was.
+    still = result.state.get("submit_patch:problems") or []
+    if still:
+        content = (f"No change was applied: the proposal still failed {len(still)} check(s) when its attempts ran out, "
+                   f"so the specification is unchanged. First: {still[0]} Its note was: {value['note']}")
+        session["messages"].append({"role": "assistant", "content": content, "at": now()})
+        store.save_session(session, "studio")
+        emit({"type": "message", "content": content})
+        return check(store, settings, name)
     applied = apply_patch(spec, session, value, settings.model)
     counts = f"{applied['updated']} updated, {applied['added']} added, {applied['dropped']} dropped"
     if applied["updated"] + applied["added"] + applied["dropped"] + applied["export"]:
@@ -715,7 +762,7 @@ def apply_patch(spec, session, patch, model):
     keys = merge(spec, session, patch["add"], model, keys=session.get("keys"))
     session["keys"] = keys
     nodes = {n["id"]: n for n in spec["nodes"]}
-    updated, ignored = 0, []
+    updated, ignored, invalid = 0, [], []
     why = f"changed in the spec studio for '{session['title']}'"
 
     def resolve(value):
@@ -741,12 +788,18 @@ def apply_patch(spec, session, patch, model):
                         _edge(spec, t, relation, node["id"], why)
                 changed = True
             elif field in EDITABLE.get(node["kind"], set()):
-                if field == "title":
-                    node["title"] = str(value)[:256]
-                elif node["kind"] == "Requirement" and field in CLAUSES:
-                    node["data"][field] = clause(value)
+                if node["kind"] == "Requirement" and field in CLAUSES:
+                    value = clause(value)
                 elif node["kind"] == "Requirement" and field == "conditions" and isinstance(value, list):
-                    node["data"][field] = [clause(v) for v in value]
+                    value = [clause(v) for v in value]
+                elif field == "title" and isinstance(value, str):
+                    value = value[:256]
+                # A value the AxiomSpec schema refuses is never stored; the patcher is told which field.
+                if _field_validator(node["kind"], field).errors(value):
+                    invalid.append(f"{node['id']}.{field}")
+                    continue
+                if field == "title":
+                    node["title"] = value
                 else:
                     node["data"][field] = value
                 changed = True
@@ -761,7 +814,16 @@ def apply_patch(spec, session, patch, model):
         _set_entry(session, field, value)
     added = len(set(session["nodes"]) - before)
     return {"updated": updated, "added": added, "dropped": len(dropped), "export": len(patch.get("export") or {}),
-            "ignored": ignored}
+            "ignored": ignored, "invalid": invalid}
+
+
+@functools.lru_cache(maxsize=None)
+def _field_validator(kind, field):
+    """The AxiomSpec schema of one editable field of a record kind, so a patched value is checked before it is stored."""
+    whole = axspec.schema_validator().root
+    branch = next(b for b in whole["properties"]["nodes"]["items"]["oneOf"] if b["properties"]["kind"].get("const") == kind)
+    schema = branch["properties"]["title"] if field == "title" else branch["properties"]["data"]["properties"][field]
+    return Validator({**schema, "$defs": whole.get("$defs", {})})
 
 
 def approve(store, client, settings, name, emit=lambda e: None):
@@ -769,6 +831,10 @@ def approve(store, client, settings, name, emit=lambda e: None):
     session = check(store, settings, name)
     if session["state"] not in ("ready", "exported"):
         raise StoreError("the feature is not ready: answer the open questions first")
+    # The ID, the dependencies and the architecture digest come from the build factory's catalog: without it, no export.
+    if not catalog(settings)["available"]:
+        raise StoreError(f"approval refused: the aeion-observability catalog under {settings.observability} cannot be read, "
+                         "so the feature's ID, dependencies and architecture digest cannot be checked; set AEION_OBSERVABILITY")
     spec = _load(store, session)
     approval = _source(spec, "user_input", f"approved by the owner in aeion-core studio {name} on {date.today().isoformat()}",
                        review="reviewed")

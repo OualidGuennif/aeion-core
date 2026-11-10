@@ -81,7 +81,8 @@ counts, never content) and tool activity.
 ## Invariants
 
 - The OpenCode key stays in the server process: the agent receives a per-run token valid only on the
-  loopback gateway, which refuses unknown tokens and any other model (test_agents).
+  loopback gateway, which refuses unknown tokens and any other model (test_agents). A body whose
+  `Content-Length` is not plain digits (400) or exceeds 16 MB (413) is refused before it is read.
 - A submission is accepted only when it matches its schema; the deterministic checks then run on a
   scratch copy and their failures go back to the agent as a tool result, at most `attempts` times. An
   amendment (`amend_fragment`) carries only the items that change and is checked as a whole.

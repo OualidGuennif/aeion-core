@@ -1,6 +1,7 @@
 # Spec: knowledge/components/aeion-engine.md
 """Settings from the environment, with safe local defaults. The API key is read from the process
 environment or from one line of the project's .env, and is never printed, logged or returned."""
+import ipaddress
 import os
 import sys
 from dataclasses import dataclass
@@ -30,13 +31,32 @@ class Settings:
         return PRICES.get(self.model, (0.0, 0.0))
 
 
+class ConfigError(ValueError):
+    """A setting the server refuses to start with."""
+
+
+def loopback(host):
+    """True for localhost and loopback addresses (IPv4-mapped included); nothing is resolved."""
+    if host.lower() == "localhost":
+        return True
+    try:
+        address = ipaddress.ip_address(host.strip("[]"))
+    except ValueError:
+        return False
+    return address.is_loopback or bool(getattr(address, "ipv4_mapped", None) and address.ipv4_mapped.is_loopback)
+
+
 def load():
-    """The effective settings; nothing here reads the key."""
+    """The effective settings; nothing here reads the key. The server answers this machine only."""
     env = os.environ
+    host = env.get("AEION_HOST", "127.0.0.1")
+    if not loopback(host):
+        raise ConfigError(f"AEION_HOST={host} is not a loopback address: aeion-core serves this machine only "
+                          "(use 127.0.0.1, ::1 or localhost)")
     return Settings(root=ROOT, data=Path(env.get("AEION_DATA", ROOT / "workspace")).resolve(),
                     observability=Path(env.get("AEION_OBSERVABILITY", ROOT.parent / "aeion-observability")).resolve(),
                     provider=env.get("AEION_LLM", "flue"), url=env.get("AEION_LLM_URL", DEFAULT_URL),
-                    model=env.get("AEION_MODEL", DEFAULT_MODEL), host=env.get("AEION_HOST", "127.0.0.1"),
+                    model=env.get("AEION_MODEL", DEFAULT_MODEL), host=host,
                     port=int(env.get("AEION_PORT", "8765")))
 
 

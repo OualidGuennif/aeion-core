@@ -24,7 +24,7 @@ A feature document becomes AxiomSpec obligations that pass the template's gates,
 
 Success measure: Every exported feature file loads in the build factory's catalog with its contract current.
 
-Requirements: [REQ-010](requirements.md#req-010), [REQ-011](requirements.md#req-011), [REQ-012](requirements.md#req-012), [REQ-013](requirements.md#req-013), [REQ-014](requirements.md#req-014)
+Requirements: [REQ-010](requirements.md#req-010), [REQ-011](requirements.md#req-011), [REQ-012](requirements.md#req-012), [REQ-013](requirements.md#req-013), [REQ-014](requirements.md#req-014), [REQ-021](requirements.md#req-021), [REQ-022](requirements.md#req-022), [REQ-023](requirements.md#req-023), [REQ-024](requirements.md#req-024)
 
 <a id="goal-003"></a>
 ### GOAL-003 Answer documentation questions with checkable citations (active)
@@ -51,7 +51,7 @@ The server answers only this machine, refuses cross-site writes and never return
 
 Success measure: Every security test of the engine passes.
 
-Requirements: [REQ-017](requirements.md#req-017), [REQ-018](requirements.md#req-018), [REQ-019](requirements.md#req-019), [REQ-020](requirements.md#req-020)
+Requirements: [REQ-017](requirements.md#req-017), [REQ-018](requirements.md#req-018), [REQ-019](requirements.md#req-019), [REQ-020](requirements.md#req-020), [REQ-025](requirements.md#req-025), [REQ-026](requirements.md#req-026)
 
 ## Actors
 

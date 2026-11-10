@@ -126,6 +126,16 @@ class Run:
                 f"(open decisions, unvalidated assumptions) are not listed."), False
 
 
+def content_length(headers, limit):
+    """(length, None) when the declared body length is plain digits within the limit; else (None, 400 or 413)."""
+    raw = (headers.get("Content-Length") or "0").strip()
+    if not re.fullmatch(r"[0-9]+", raw):
+        return None, 400
+    if len(raw) > 12 or int(raw) > limit:
+        return None, 413
+    return int(raw), None
+
+
 @dataclass
 class Result:
     text: str
@@ -226,9 +236,9 @@ class _GatewayHandler(BaseHTTPRequestHandler):
         run = self.owner.find(self.headers.get("Authorization"))
         if run is None:
             return self._json(401, {"error": {"message": "unknown run token"}})
-        length = int(self.headers.get("Content-Length") or 0)
-        if length > MAX_BODY:
-            return self._json(413, {"error": {"message": "request too large"}})
+        length, refused = content_length(self.headers, MAX_BODY)
+        if refused:
+            return self._json(refused, {"error": {"message": "Content-Length must be a number of bytes up to 16 MB"}})
         try:
             body = json.loads(self.rfile.read(length) or b"{}")
         except ValueError:

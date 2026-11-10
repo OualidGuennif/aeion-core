@@ -23,6 +23,17 @@ def settings(root, observability=None, url="http://127.0.0.1:9/v1/chat/completio
                            provider="mock", url=url, model="deepseek-v4.1-flash", host="127.0.0.1", port=0)
 
 
+def build_factory(folder):
+    """A minimal aeion-observability checkout: one catalogued feature and the architecture file."""
+    features = Path(folder) / "demo/forum/features"
+    features.mkdir(parents=True)
+    (Path(folder) / "demo/forum/ARCHITECTURE.md").write_text("# Architecture\n", encoding="utf-8")
+    row = {"id": "001", "sequence": 1, "title": "App skeleton", "area": "foundation", "size": "S", "parallel": False,
+           "phase": "P0", "tier": 3, "write_paths": ["demo/forum-app/"], "depends_on": [], "file": "001-app-skeleton.md"}
+    (features / "MANIFEST.json").write_text(json.dumps({"schema_version": 2, "count": 1, "features": [row]}), encoding="utf-8")
+    return Path(folder)
+
+
 class Workspace:
     """A temporary workspace with a store, settings and mock agents; removed on close."""
 

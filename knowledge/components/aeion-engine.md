@@ -40,12 +40,13 @@ assistant. It runs with `python3 app/serve` and a browser; the agents need Node 
 
 Settings come from the environment: `AEION_DATA` (workspace, default `workspace/`, ignored by Git),
 `AEION_OBSERVABILITY` (default `../aeion-observability`, read only), `AEION_HOST`/`AEION_PORT`
-(default `127.0.0.1:8765`), `AEION_MODEL`, `AEION_LLM` (`flue`, or `mock` offline).
+(default `127.0.0.1:8765`; the host must be a loopback address, or the server refuses to start),
+`AEION_MODEL`, `AEION_LLM` (`flue`, or `mock` offline).
 
 ## Inputs
 
-JSON requests from the page. Writes are `POST`/`PUT` with the `X-Aeion: 1` header and a JSON body of at
-most 2 MB. Long work runs as a job whose events stream at `GET /api/jobs/<id>/events`.
+JSON requests from the page. Writes are `POST`/`PUT` with the `X-Aeion: 1` header and a JSON body whose
+`Content-Length` is plain digits and at most 2 MB (400 otherwise, 413 over the limit). Long work runs as a job whose events stream at `GET /api/jobs/<id>/events`.
 
 ## Outputs
 
@@ -54,7 +55,8 @@ specifications and exports (`workspace/products/<name>`), all written atomically
 
 ## Invariants
 
-- The server listens on loopback and refuses a foreign `Host` header (DNS rebinding).
+- The server binds a loopback address only, answers loopback peers only (403 otherwise), and refuses a
+  foreign `Host` header (DNS rebinding).
 - A write without the custom header or a JSON body is refused (cross-site requests).
 - A name becomes a path only after `[a-z0-9][a-z0-9-]{0,79}` matches it.
 - The key, a stack trace or provider internals never reach a response.

@@ -594,6 +594,150 @@
       }
     },
     {
+      "id": "REQ-021",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Apply only a checked patch",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "data",
+        "priority": "must",
+        "risk": "high",
+        "verification_mode": "executable",
+        "pattern": "unwanted",
+        "conditions": [],
+        "trigger": "a patch still fails its checks when its attempts run out, or sets a value outside the AxiomSpec schema",
+        "feature": null,
+        "subject": "spec studio",
+        "response": "leave the specification unchanged and tell the owner which check still fails"
+      }
+    },
+    {
+      "id": "REQ-022",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Never save what the gates refuse",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "data",
+        "priority": "must",
+        "risk": "high",
+        "verification_mode": "executable",
+        "pattern": "unwanted",
+        "conditions": [],
+        "trigger": "a save would add a strict JSON, schema, reference or BCIR error",
+        "feature": null,
+        "subject": "spec studio",
+        "response": "refuse the save and leave the stored specification unchanged"
+      }
+    },
+    {
+      "id": "REQ-023",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Report gates that did not run as unknown",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "functional",
+        "priority": "must",
+        "risk": "medium",
+        "verification_mode": "executable",
+        "pattern": "unwanted",
+        "conditions": [],
+        "trigger": "the schema check fails",
+        "feature": null,
+        "subject": "spec studio",
+        "response": "report the other design gates as unknown and the feature as not ready"
+      }
+    },
+    {
+      "id": "REQ-024",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Approve only against the build factory's catalog",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "data",
+        "priority": "must",
+        "risk": "high",
+        "verification_mode": "executable",
+        "pattern": "unwanted",
+        "conditions": [],
+        "trigger": "the aeion-observability catalog cannot be read",
+        "feature": null,
+        "subject": "spec studio",
+        "response": "refuse the approval and name the setting to fix"
+      }
+    },
+    {
+      "id": "REQ-025",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Serve this machine only",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "security",
+        "priority": "must",
+        "risk": "critical",
+        "verification_mode": "executable",
+        "pattern": "unwanted",
+        "conditions": [],
+        "trigger": "the configured host is not a loopback address, or a request comes from another machine",
+        "feature": null,
+        "subject": "web server",
+        "response": "refuse to start, or refuse the request with status 403"
+      }
+    },
+    {
+      "id": "REQ-026",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Bound every request body",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "security",
+        "priority": "must",
+        "risk": "high",
+        "verification_mode": "executable",
+        "pattern": "unwanted",
+        "conditions": [],
+        "trigger": "a request's Content-Length is not plain digits or exceeds the limit",
+        "feature": null,
+        "subject": "web server and gateway",
+        "response": "refuse the request with status 400 or 413 before reading its body"
+      }
+    },
+    {
       "id": "TEST-001",
       "kind": "TestCase",
       "revision": 1,
@@ -866,7 +1010,7 @@
       ],
       "data": {
         "level": "unit",
-        "oracle": "Approving with a blocking decision open raises a refusal and writes no export.",
+        "oracle": "Approving with a blocking decision open raises a refusal, writes no export and leaves the records draft.",
         "state": "implemented",
         "runner": "unittest",
         "negative": true,
@@ -1274,6 +1418,226 @@
       }
     },
     {
+      "id": "TEST-036",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Failing patch not applied",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "A patch setting priority 7 and an object risk is refused as outside the schema until its attempts run out; spec.json keeps its bytes and the owner is told no change was applied.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-046",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Checked patch applied",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "A patch lowering a requirement's priority is accepted at once; spec.json holds the new value at the next revision.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": false,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-037",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Breaking save refused",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "Saving a spec with a schema error or a dangling edge raises a refusal naming G01 or G02 and leaves the file unchanged.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-038",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Gates after a schema failure unknown",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "With a schema error, G01 is error, G02 to G07 are unknown and the feature is not design-ready.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-039",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Approval needs the catalog",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "Approving a ready feature while the catalog cannot be read is refused, naming AEION_OBSERVABILITY, and writes no export.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-040",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Export loads in the build factory's loader",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "contract",
+        "oracle": "aeion-observability's own load_manifest accepts a copy of its catalog with the exported file and row added, and the new feature's contract is current.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": false,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-041",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Off-loopback host refused",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "AEION_HOST set to 0.0.0.0, a LAN address, ::, a name or nothing raises ConfigError; loopback values load.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-042",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Remote peer refused",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "A read and a valid write from peer 192.168.1.29 both get 403 and no feature is stored.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-043",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Server body length bounded",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "A write with Content-Length -1 or abc gets 400, one over 2 MB gets 413, and nothing is stored.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-044",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Gateway body length bounded",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "A relay request with Content-Length -1 or abc gets 400, one over 16 MB gets 413, and the upstream receives nothing.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-045",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "No response carries the key",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "With a sentinel key held by the real agent client, no page, API answer, refusal or header contains it.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
       "id": "TEST-034",
       "kind": "TestCase",
       "revision": 1,
@@ -1613,6 +1977,54 @@
     },
     {
       "id": "EDGE-021",
+      "from": "REQ-021",
+      "relation": "satisfies",
+      "to": "GOAL-002",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-022",
+      "from": "REQ-022",
+      "relation": "satisfies",
+      "to": "GOAL-002",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-023",
+      "from": "REQ-023",
+      "relation": "satisfies",
+      "to": "GOAL-002",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-024",
+      "from": "REQ-024",
+      "relation": "satisfies",
+      "to": "GOAL-002",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-025",
+      "from": "REQ-025",
+      "relation": "satisfies",
+      "to": "GOAL-005",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-026",
+      "from": "REQ-026",
+      "relation": "satisfies",
+      "to": "GOAL-005",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-027",
       "from": "TEST-001",
       "relation": "verifies",
       "to": "REQ-001",
@@ -1620,7 +2032,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-022",
+      "id": "EDGE-028",
       "from": "TEST-001",
       "relation": "verifies",
       "to": "REQ-002",
@@ -1628,7 +2040,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-023",
+      "id": "EDGE-029",
       "from": "TEST-001",
       "relation": "verifies",
       "to": "REQ-004",
@@ -1636,7 +2048,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-024",
+      "id": "EDGE-030",
       "from": "TEST-002",
       "relation": "verifies",
       "to": "REQ-003",
@@ -1644,7 +2056,15 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-025",
+      "id": "EDGE-031",
+      "from": "TEST-002",
+      "relation": "verifies",
+      "to": "REQ-026",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-032",
       "from": "TEST-003",
       "relation": "verifies",
       "to": "REQ-003",
@@ -1652,7 +2072,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-026",
+      "id": "EDGE-033",
       "from": "TEST-004",
       "relation": "verifies",
       "to": "REQ-003",
@@ -1660,7 +2080,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-027",
+      "id": "EDGE-034",
       "from": "TEST-005",
       "relation": "verifies",
       "to": "REQ-004",
@@ -1668,7 +2088,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-028",
+      "id": "EDGE-035",
       "from": "TEST-006",
       "relation": "verifies",
       "to": "REQ-004",
@@ -1676,7 +2096,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-029",
+      "id": "EDGE-036",
       "from": "TEST-006",
       "relation": "verifies",
       "to": "REQ-005",
@@ -1684,7 +2104,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-030",
+      "id": "EDGE-037",
       "from": "TEST-007",
       "relation": "verifies",
       "to": "REQ-005",
@@ -1692,7 +2112,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-031",
+      "id": "EDGE-038",
       "from": "TEST-008",
       "relation": "verifies",
       "to": "REQ-001",
@@ -1700,7 +2120,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-032",
+      "id": "EDGE-039",
       "from": "TEST-008",
       "relation": "verifies",
       "to": "REQ-006",
@@ -1708,7 +2128,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-033",
+      "id": "EDGE-040",
       "from": "TEST-009",
       "relation": "verifies",
       "to": "REQ-007",
@@ -1716,7 +2136,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-034",
+      "id": "EDGE-041",
       "from": "TEST-010",
       "relation": "verifies",
       "to": "REQ-008",
@@ -1724,7 +2144,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-035",
+      "id": "EDGE-042",
       "from": "TEST-011",
       "relation": "verifies",
       "to": "REQ-009",
@@ -1732,7 +2152,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-036",
+      "id": "EDGE-043",
       "from": "TEST-012",
       "relation": "verifies",
       "to": "REQ-010",
@@ -1740,7 +2160,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-037",
+      "id": "EDGE-044",
       "from": "TEST-012",
       "relation": "verifies",
       "to": "REQ-011",
@@ -1748,7 +2168,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-038",
+      "id": "EDGE-045",
       "from": "TEST-013",
       "relation": "verifies",
       "to": "REQ-011",
@@ -1756,7 +2176,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-039",
+      "id": "EDGE-046",
       "from": "TEST-014",
       "relation": "verifies",
       "to": "REQ-012",
@@ -1764,7 +2184,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-040",
+      "id": "EDGE-047",
       "from": "TEST-015",
       "relation": "verifies",
       "to": "REQ-012",
@@ -1772,7 +2192,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-041",
+      "id": "EDGE-048",
       "from": "TEST-015",
       "relation": "verifies",
       "to": "REQ-013",
@@ -1780,7 +2200,23 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-042",
+      "id": "EDGE-049",
+      "from": "TEST-015",
+      "relation": "verifies",
+      "to": "REQ-022",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-050",
+      "from": "TEST-015",
+      "relation": "verifies",
+      "to": "REQ-024",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-051",
       "from": "TEST-016",
       "relation": "verifies",
       "to": "REQ-005",
@@ -1788,7 +2224,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-043",
+      "id": "EDGE-052",
       "from": "TEST-016",
       "relation": "verifies",
       "to": "REQ-013",
@@ -1796,7 +2232,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-044",
+      "id": "EDGE-053",
       "from": "TEST-017",
       "relation": "verifies",
       "to": "REQ-014",
@@ -1804,7 +2240,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-045",
+      "id": "EDGE-054",
       "from": "TEST-018",
       "relation": "verifies",
       "to": "REQ-005",
@@ -1812,7 +2248,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-046",
+      "id": "EDGE-055",
       "from": "TEST-018",
       "relation": "verifies",
       "to": "REQ-014",
@@ -1820,7 +2256,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-047",
+      "id": "EDGE-056",
       "from": "TEST-019",
       "relation": "verifies",
       "to": "REQ-015",
@@ -1828,7 +2264,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-048",
+      "id": "EDGE-057",
       "from": "TEST-020",
       "relation": "verifies",
       "to": "REQ-016",
@@ -1836,7 +2272,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-049",
+      "id": "EDGE-058",
       "from": "TEST-020",
       "relation": "verifies",
       "to": "REQ-015",
@@ -1844,7 +2280,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-050",
+      "id": "EDGE-059",
       "from": "TEST-021",
       "relation": "verifies",
       "to": "REQ-017",
@@ -1852,7 +2288,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-051",
+      "id": "EDGE-060",
       "from": "TEST-022",
       "relation": "verifies",
       "to": "REQ-017",
@@ -1860,7 +2296,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-052",
+      "id": "EDGE-061",
       "from": "TEST-023",
       "relation": "verifies",
       "to": "REQ-017",
@@ -1868,7 +2304,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-053",
+      "id": "EDGE-062",
       "from": "TEST-023",
       "relation": "verifies",
       "to": "REQ-019",
@@ -1876,7 +2312,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-054",
+      "id": "EDGE-063",
       "from": "TEST-024",
       "relation": "verifies",
       "to": "REQ-018",
@@ -1884,7 +2320,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-055",
+      "id": "EDGE-064",
       "from": "TEST-025",
       "relation": "verifies",
       "to": "REQ-018",
@@ -1892,7 +2328,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-056",
+      "id": "EDGE-065",
       "from": "TEST-026",
       "relation": "verifies",
       "to": "REQ-019",
@@ -1900,7 +2336,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-057",
+      "id": "EDGE-066",
       "from": "TEST-027",
       "relation": "verifies",
       "to": "REQ-019",
@@ -1908,7 +2344,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-058",
+      "id": "EDGE-067",
       "from": "TEST-028",
       "relation": "verifies",
       "to": "REQ-020",
@@ -1916,7 +2352,15 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-059",
+      "id": "EDGE-068",
+      "from": "TEST-028",
+      "relation": "verifies",
+      "to": "REQ-025",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-069",
       "from": "TEST-029",
       "relation": "verifies",
       "to": "REQ-020",
@@ -1924,7 +2368,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-060",
+      "id": "EDGE-070",
       "from": "TEST-029",
       "relation": "verifies",
       "to": "REQ-018",
@@ -1932,7 +2376,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-061",
+      "id": "EDGE-071",
       "from": "TEST-030",
       "relation": "verifies",
       "to": "REQ-007",
@@ -1940,7 +2384,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-062",
+      "id": "EDGE-072",
       "from": "TEST-031",
       "relation": "verifies",
       "to": "REQ-004",
@@ -1948,7 +2392,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-063",
+      "id": "EDGE-073",
       "from": "TEST-032",
       "relation": "verifies",
       "to": "REQ-005",
@@ -1956,7 +2400,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-064",
+      "id": "EDGE-074",
       "from": "TEST-033",
       "relation": "verifies",
       "to": "REQ-007",
@@ -1964,7 +2408,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-065",
+      "id": "EDGE-075",
       "from": "TEST-033",
       "relation": "verifies",
       "to": "REQ-001",
@@ -1972,7 +2416,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-066",
+      "id": "EDGE-076",
       "from": "TEST-035",
       "relation": "verifies",
       "to": "REQ-001",
@@ -1980,7 +2424,111 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-067",
+      "id": "EDGE-077",
+      "from": "TEST-036",
+      "relation": "verifies",
+      "to": "REQ-021",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-078",
+      "from": "TEST-036",
+      "relation": "verifies",
+      "to": "REQ-005",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-079",
+      "from": "TEST-046",
+      "relation": "verifies",
+      "to": "REQ-021",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-080",
+      "from": "TEST-037",
+      "relation": "verifies",
+      "to": "REQ-022",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-081",
+      "from": "TEST-038",
+      "relation": "verifies",
+      "to": "REQ-023",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-082",
+      "from": "TEST-039",
+      "relation": "verifies",
+      "to": "REQ-024",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-083",
+      "from": "TEST-040",
+      "relation": "verifies",
+      "to": "REQ-013",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-084",
+      "from": "TEST-041",
+      "relation": "verifies",
+      "to": "REQ-025",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-085",
+      "from": "TEST-042",
+      "relation": "verifies",
+      "to": "REQ-025",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-086",
+      "from": "TEST-043",
+      "relation": "verifies",
+      "to": "REQ-026",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-087",
+      "from": "TEST-044",
+      "relation": "verifies",
+      "to": "REQ-026",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-088",
+      "from": "TEST-045",
+      "relation": "verifies",
+      "to": "REQ-020",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-089",
+      "from": "TEST-045",
+      "relation": "verifies",
+      "to": "REQ-003",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-090",
       "from": "TEST-034",
       "relation": "verifies",
       "to": "REQ-009",
@@ -1988,7 +2536,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-068",
+      "id": "EDGE-091",
       "from": "COMP-001",
       "relation": "implements",
       "to": "REQ-017",
@@ -1996,7 +2544,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-069",
+      "id": "EDGE-092",
       "from": "COMP-001",
       "relation": "implements",
       "to": "REQ-018",
@@ -2004,7 +2552,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-070",
+      "id": "EDGE-093",
       "from": "COMP-001",
       "relation": "implements",
       "to": "REQ-019",
@@ -2012,7 +2560,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-071",
+      "id": "EDGE-094",
       "from": "COMP-001",
       "relation": "implements",
       "to": "REQ-020",
@@ -2020,7 +2568,23 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-072",
+      "id": "EDGE-095",
+      "from": "COMP-001",
+      "relation": "implements",
+      "to": "REQ-025",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-096",
+      "from": "COMP-001",
+      "relation": "implements",
+      "to": "REQ-026",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-097",
       "from": "COMP-002",
       "relation": "implements",
       "to": "REQ-001",
@@ -2028,7 +2592,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-073",
+      "id": "EDGE-098",
       "from": "COMP-002",
       "relation": "implements",
       "to": "REQ-002",
@@ -2036,7 +2600,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-074",
+      "id": "EDGE-099",
       "from": "COMP-002",
       "relation": "implements",
       "to": "REQ-003",
@@ -2044,7 +2608,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-075",
+      "id": "EDGE-100",
       "from": "COMP-002",
       "relation": "implements",
       "to": "REQ-004",
@@ -2052,7 +2616,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-076",
+      "id": "EDGE-101",
       "from": "COMP-002",
       "relation": "implements",
       "to": "REQ-005",
@@ -2060,7 +2624,15 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-077",
+      "id": "EDGE-102",
+      "from": "COMP-002",
+      "relation": "implements",
+      "to": "REQ-026",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-103",
       "from": "COMP-003",
       "relation": "implements",
       "to": "REQ-006",
@@ -2068,7 +2640,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-078",
+      "id": "EDGE-104",
       "from": "COMP-003",
       "relation": "implements",
       "to": "REQ-007",
@@ -2076,7 +2648,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-079",
+      "id": "EDGE-105",
       "from": "COMP-003",
       "relation": "implements",
       "to": "REQ-008",
@@ -2084,7 +2656,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-080",
+      "id": "EDGE-106",
       "from": "COMP-003",
       "relation": "implements",
       "to": "REQ-009",
@@ -2092,7 +2664,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-081",
+      "id": "EDGE-107",
       "from": "COMP-004",
       "relation": "implements",
       "to": "REQ-010",
@@ -2100,7 +2672,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-082",
+      "id": "EDGE-108",
       "from": "COMP-004",
       "relation": "implements",
       "to": "REQ-011",
@@ -2108,7 +2680,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-083",
+      "id": "EDGE-109",
       "from": "COMP-004",
       "relation": "implements",
       "to": "REQ-012",
@@ -2116,7 +2688,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-084",
+      "id": "EDGE-110",
       "from": "COMP-004",
       "relation": "implements",
       "to": "REQ-013",
@@ -2124,7 +2696,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-085",
+      "id": "EDGE-111",
       "from": "COMP-004",
       "relation": "implements",
       "to": "REQ-014",
@@ -2132,7 +2704,39 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-086",
+      "id": "EDGE-112",
+      "from": "COMP-004",
+      "relation": "implements",
+      "to": "REQ-021",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-113",
+      "from": "COMP-004",
+      "relation": "implements",
+      "to": "REQ-022",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-114",
+      "from": "COMP-004",
+      "relation": "implements",
+      "to": "REQ-023",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-115",
+      "from": "COMP-004",
+      "relation": "implements",
+      "to": "REQ-024",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-116",
       "from": "COMP-005",
       "relation": "implements",
       "to": "REQ-015",
@@ -2140,7 +2744,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-087",
+      "id": "EDGE-117",
       "from": "COMP-005",
       "relation": "implements",
       "to": "REQ-016",
@@ -2148,7 +2752,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-088",
+      "id": "EDGE-118",
       "from": "REQ-001",
       "relation": "uses_term",
       "to": "TERM-001",
@@ -2156,7 +2760,7 @@
       "rationale": "The wording relies on this defined term."
     },
     {
-      "id": "EDGE-089",
+      "id": "EDGE-119",
       "from": "REQ-002",
       "relation": "uses_term",
       "to": "TERM-001",
@@ -2164,7 +2768,7 @@
       "rationale": "The wording relies on this defined term."
     },
     {
-      "id": "EDGE-090",
+      "id": "EDGE-120",
       "from": "REQ-004",
       "relation": "uses_term",
       "to": "TERM-002",
@@ -2172,7 +2776,7 @@
       "rationale": "The wording relies on this defined term."
     },
     {
-      "id": "EDGE-091",
+      "id": "EDGE-121",
       "from": "REQ-005",
       "relation": "uses_term",
       "to": "TERM-002",
@@ -2180,7 +2784,7 @@
       "rationale": "The wording relies on this defined term."
     },
     {
-      "id": "EDGE-092",
+      "id": "EDGE-122",
       "from": "DEC-001",
       "relation": "governs",
       "to": "REQ-001",
@@ -2188,7 +2792,7 @@
       "rationale": "The decision fixes how this is met."
     },
     {
-      "id": "EDGE-093",
+      "id": "EDGE-123",
       "from": "DEC-001",
       "relation": "governs",
       "to": "REQ-002",
@@ -2196,7 +2800,7 @@
       "rationale": "The decision fixes how this is met."
     },
     {
-      "id": "EDGE-094",
+      "id": "EDGE-124",
       "from": "REQ-001",
       "relation": "assumes",
       "to": "ASM-001",
@@ -2514,6 +3118,105 @@
     {
       "id": "BIND-035",
       "kind": "test",
+      "node_id": "TEST-036",
+      "path": "app/tests/test_sections.py",
+      "symbol": "StudioTests.test_a_patch_that_still_fails_its_checks_is_not_applied",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-036",
+      "kind": "test",
+      "node_id": "TEST-046",
+      "path": "app/tests/test_sections.py",
+      "symbol": "StudioTests.test_a_checked_patch_is_applied_and_saved",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-037",
+      "kind": "test",
+      "node_id": "TEST-037",
+      "path": "app/tests/test_sections.py",
+      "symbol": "StudioTests.test_a_save_that_would_break_the_specification_is_refused",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-038",
+      "kind": "test",
+      "node_id": "TEST-038",
+      "path": "app/tests/test_sections.py",
+      "symbol": "StudioTests.test_gates_that_did_not_run_are_unknown",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-039",
+      "kind": "test",
+      "node_id": "TEST-039",
+      "path": "app/tests/test_sections.py",
+      "symbol": "StudioTests.test_approval_is_refused_while_the_build_factory_catalog_cannot_be_read",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-040",
+      "kind": "test",
+      "node_id": "TEST-040",
+      "path": "app/tests/test_sections.py",
+      "symbol": "StudioTests.test_an_export_loads_in_the_build_factorys_own_catalog",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-041",
+      "kind": "test",
+      "node_id": "TEST-041",
+      "path": "app/tests/test_engine.py",
+      "symbol": "ConfigTests.test_the_server_refuses_a_host_off_loopback",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-042",
+      "kind": "test",
+      "node_id": "TEST-042",
+      "path": "app/tests/test_engine.py",
+      "symbol": "ServerTests.test_a_peer_on_another_machine_is_refused",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-043",
+      "kind": "test",
+      "node_id": "TEST-043",
+      "path": "app/tests/test_engine.py",
+      "symbol": "ServerTests.test_a_body_length_that_is_not_a_bounded_number_is_refused",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-044",
+      "kind": "test",
+      "node_id": "TEST-044",
+      "path": "app/tests/test_agents.py",
+      "symbol": "GatewayTests.test_a_body_length_that_is_not_a_bounded_number_is_refused",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-045",
+      "kind": "test",
+      "node_id": "TEST-045",
+      "path": "app/tests/test_engine.py",
+      "symbol": "KeyTests.test_no_response_carries_the_key",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-046",
+      "kind": "test",
       "node_id": "TEST-034",
       "path": "app/tests/test_sections.py",
       "symbol": "DesignTests.test_ask_owner_turns_the_section_into_a_question",
@@ -2521,7 +3224,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-036",
+      "id": "BIND-047",
       "kind": "code",
       "node_id": "COMP-001",
       "path": "app/aeion/server.py",
@@ -2530,7 +3233,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-037",
+      "id": "BIND-048",
       "kind": "code",
       "node_id": "COMP-001",
       "path": "app/aeion/store.py",
@@ -2539,7 +3242,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-038",
+      "id": "BIND-049",
       "kind": "code",
       "node_id": "COMP-001",
       "path": "app/aeion/markdown.py",
@@ -2548,7 +3251,16 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-039",
+      "id": "BIND-050",
+      "kind": "code",
+      "node_id": "COMP-001",
+      "path": "app/aeion/config.py",
+      "symbol": "loopback",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-051",
       "kind": "code",
       "node_id": "COMP-002",
       "path": "app/aeion/agents.py",
@@ -2557,7 +3269,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-040",
+      "id": "BIND-052",
       "kind": "code",
       "node_id": "COMP-002",
       "path": "app/aeion/agents.py",
@@ -2566,7 +3278,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-041",
+      "id": "BIND-053",
       "kind": "code",
       "node_id": "COMP-002",
       "path": "app/aeion/agents.py",
@@ -2575,7 +3287,16 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-042",
+      "id": "BIND-054",
+      "kind": "code",
+      "node_id": "COMP-002",
+      "path": "app/aeion/agents.py",
+      "symbol": "content_length",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-055",
       "kind": "code",
       "node_id": "COMP-003",
       "path": "app/aeion/brainstorm.py",
@@ -2584,7 +3305,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-043",
+      "id": "BIND-056",
       "kind": "code",
       "node_id": "COMP-003",
       "path": "app/aeion/goldfish/__init__.py",
@@ -2593,7 +3314,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-044",
+      "id": "BIND-057",
       "kind": "code",
       "node_id": "COMP-003",
       "path": "app/aeion/design.py",
@@ -2602,7 +3323,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-045",
+      "id": "BIND-058",
       "kind": "code",
       "node_id": "COMP-004",
       "path": "app/aeion/specstudio.py",
@@ -2611,7 +3332,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-046",
+      "id": "BIND-059",
       "kind": "code",
       "node_id": "COMP-004",
       "path": "app/aeion/specstudio.py",
@@ -2620,7 +3341,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-047",
+      "id": "BIND-060",
       "kind": "code",
       "node_id": "COMP-004",
       "path": "app/aeion/specstudio.py",
@@ -2629,7 +3350,25 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-048",
+      "id": "BIND-061",
+      "kind": "code",
+      "node_id": "COMP-004",
+      "path": "app/aeion/specstudio.py",
+      "symbol": "change",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-062",
+      "kind": "code",
+      "node_id": "COMP-004",
+      "path": "app/aeion/specstudio.py",
+      "symbol": "_save_spec",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-063",
       "kind": "code",
       "node_id": "COMP-005",
       "path": "app/aeion/docshub.py",
@@ -2638,7 +3377,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-049",
+      "id": "BIND-064",
       "kind": "code",
       "node_id": "COMP-005",
       "path": "app/aeion/docshub.py",
@@ -2647,7 +3386,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-050",
+      "id": "BIND-065",
       "kind": "code",
       "node_id": "COMP-005",
       "path": "app/aeion/docshub.py",

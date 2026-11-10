@@ -46,7 +46,14 @@ pages and diagrams regenerate.
 ## Invariants
 
 - Code assigns IDs and edges; a fragment's local keys never become IDs.
-- Every fragment and patch is merged into a scratch copy and checked before it is accepted.
+- Every fragment and patch is merged into a scratch copy and checked before it is accepted. A patch
+  that still fails when its attempts run out is not applied; a field value outside the AxiomSpec
+  schema is never stored. A draft that still fails is saved as draft records with its failures shown.
+- Nothing is saved that `axiom check` would refuse (strict JSON, schema, references, BCIR) and the
+  stored specification did not already hold: such a save is refused and the file is unchanged.
+- When the schema check fails, the other gates did not run and are reported `unknown`, never `pass`.
+- Approval is refused while aeion-observability's catalog cannot be read: the feature's ID, its
+  dependencies and the architecture digest come from it.
 - No agent answers a decision or validates an assumption; only the owner's answer does.
 - The export is refused unless the design gates pass, every blocking question is answered, the file is
   at most 12,000 bytes, carries acceptance checks, has the eight sections and follows the build
@@ -59,7 +66,9 @@ The same specification and export settings always produce the same feature file 
 
 ## Acceptance checks
 
-- [ ] An approved feature's file loads in aeion-observability's own catalog loader with its contract current.
+- [ ] An approved feature's file loads in aeion-observability's own catalog loader with its contract
+  current (`StudioTests.test_an_export_loads_in_the_build_factorys_own_catalog`, run when
+  `AEION_OBSERVABILITY` or `../aeion-observability` holds a checkout).
 - [ ] A blocking decision keeps the feature out of `ready`.
 
 ## Out of scope

@@ -1,7 +1,8 @@
 # Spec: knowledge/components/aeion-engine.md
 """The local web server: a JSON API, background jobs streamed as server-sent events, and the static page.
-It listens on 127.0.0.1, refuses a foreign Host header (DNS rebinding) and any write without its custom
-header (cross-site requests), and never returns the API key or a stack trace."""
+It listens on a loopback address only, answers loopback peers only, refuses a foreign Host header (DNS
+rebinding) and any write without its custom header (cross-site requests), bounds every body, and never
+returns the API key or a stack trace."""
 import json
 import re
 import secrets
@@ -353,6 +354,10 @@ class Handler(BaseHTTPRequestHandler):
         self._dispatch("PUT")
 
     def _dispatch(self, method):
+        # This machine only: the peer must be a loopback address, whatever the bound host, and the Host header
+        # must name this machine (DNS rebinding).
+        if not config.loopback(self.client_address[0]):
+            return self._error(403, "peer", "this server answers this machine only")
         if not self._host_ok():
             return self._error(403, "host", "requests must name this machine")
         url = urlparse(self.path)
@@ -367,9 +372,9 @@ class Handler(BaseHTTPRequestHandler):
             # A custom header and a JSON body: a cross-site form or a simple request cannot carry both.
             if self.headers.get("X-Aeion") != "1" or "application/json" not in (self.headers.get("Content-Type") or ""):
                 return self._error(403, "csrf", "writes need the X-Aeion header and a JSON body")
-            length = int(self.headers.get("Content-Length") or 0)
-            if length > MAX_BODY:
-                return self._error(413, "too_large", "request body over 2 MB")
+            length, refused = agents.content_length(self.headers, MAX_BODY)
+            if refused:
+                return self._error(refused, "length", "the body needs a Content-Length of at most 2 MB")
             try:
                 body = json.loads(self.rfile.read(length) or b"{}")
             except ValueError:
@@ -436,7 +441,12 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def serve(settings=None):
-    app = App(settings)
+    try:
+        app = App(settings)
+    except config.ConfigError as error:
+        raise SystemExit(f"aeion-core: {error}") from None
+    if not config.loopback(app.settings.host):
+        raise SystemExit(f"aeion-core: {app.settings.host} is not a loopback address; aeion-core serves this machine only")
     Handler.app = app
     server = ThreadingHTTPServer((app.settings.host, app.settings.port), Handler)
     server.daemon_threads = True

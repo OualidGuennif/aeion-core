@@ -21,7 +21,7 @@ Gate results are computed from `knowledge/spec/spec.json` by `tools/axiom/axiom 
 | ID | Title | Level | Case | State | Verifies | Oracle |
 | --- | --- | --- | --- | --- | --- | --- |
 | <a id="test-001"></a>TEST-001 | One flue run sends each input once | integration | normal | implemented | [REQ-001](../product/requirements.md#req-001), [REQ-002](../product/requirements.md#req-002), [REQ-004](../product/requirements.md#req-004) | A real flue run's request holds the report marker and the message exactly once, effort max, thinking enabled. |
-| <a id="test-002"></a>TEST-002 | Relay adds the key and meters usage | integration | normal | implemented | [REQ-003](../product/requirements.md#req-003) | The upstream receives the key, the session header and the user agent; the run records the usage. |
+| <a id="test-002"></a>TEST-002 | Relay adds the key and meters usage | integration | normal | implemented | [REQ-003](../product/requirements.md#req-003), [REQ-026](../product/requirements.md#req-026) | The upstream receives the key, the session header and the user agent; the run records the usage. |
 | <a id="test-003"></a>TEST-003 | Unknown token or model is refused | integration | refusal | implemented | [REQ-003](../product/requirements.md#req-003) | An unknown token gets 401 and another model 400; the upstream receives nothing. |
 | <a id="test-004"></a>TEST-004 | Key absent from refusals | integration | refusal | implemented | [REQ-003](../product/requirements.md#req-003) | An upstream 403 reaches the caller without the key in its body. |
 | <a id="test-005"></a>TEST-005 | Schema refusal records nothing | unit | refusal | implemented | [REQ-004](../product/requirements.md#req-004) | A value with an overlong item is refused, naming the path, and no submission is recorded. |
@@ -33,8 +33,8 @@ Gate results are computed from `knowledge/spec/spec.json` by `tools/axiom/axiom 
 | <a id="test-011"></a>TEST-011 | Edit must occur once | unit | refusal | implemented | [REQ-009](../product/requirements.md#req-009) | A resolution whose find text is absent is refused with its count; the corrected one applies. |
 | <a id="test-012"></a>TEST-012 | Clauses normalized, decision open | unit | normal | implemented | [REQ-010](../product/requirements.md#req-010), [REQ-011](../product/requirements.md#req-011) | The stored trigger, subject and response are lowercase without a final period, and the decision has no answer. |
 | <a id="test-013"></a>TEST-013 | Patch cannot answer a decision | integration | refusal | implemented | [REQ-011](../product/requirements.md#req-011) | A patch that relinks a test and sets a decision answer changes the links only. |
-| <a id="test-014"></a>TEST-014 | Approval refused while a decision is open | unit | refusal | implemented | [REQ-012](../product/requirements.md#req-012) | Approving with a blocking decision open raises a refusal and writes no export. |
-| <a id="test-015"></a>TEST-015 | Answer then approve exports | integration | normal | implemented | [REQ-012](../product/requirements.md#req-012), [REQ-013](../product/requirements.md#req-013) | After the owner answers, the feature is ready and approval writes 101-\*.md under 12,000 bytes with checks and frontmatter. |
+| <a id="test-014"></a>TEST-014 | Approval refused while a decision is open | unit | refusal | implemented | [REQ-012](../product/requirements.md#req-012) | Approving with a blocking decision open raises a refusal, writes no export and leaves the records draft. |
+| <a id="test-015"></a>TEST-015 | Answer then approve exports | integration | normal | implemented | [REQ-012](../product/requirements.md#req-012), [REQ-013](../product/requirements.md#req-013), [REQ-022](../product/requirements.md#req-022), [REQ-024](../product/requirements.md#req-024) | After the owner answers, the feature is ready and approval writes 101-\*.md under 12,000 bytes with checks and frontmatter. |
 | <a id="test-016"></a>TEST-016 | Gate failures named by key | unit | refusal | implemented | [REQ-005](../product/requirements.md#req-005), [REQ-013](../product/requirements.md#req-013) | A fragment with a pattern error gets PATTERN\_FIELDS on r1 back; the corrected one is accepted. |
 | <a id="test-017"></a>TEST-017 | Scope rules on write paths | unit | refusal | implemented | [REQ-014](../product/requirements.md#req-014) | Hidden, doubled-slash, foreign and parent paths each produce a WRITE\_PATHS issue. |
 | <a id="test-018"></a>TEST-018 | Amendment checked as a whole | integration | normal | implemented | [REQ-005](../product/requirements.md#req-005), [REQ-014](../product/requirements.md#req-014) | An amendment before a submission is refused; after one, it replaces the item by key and is accepted. |
@@ -47,7 +47,7 @@ Gate results are computed from `knowledge/spec/spec.json` by `tools/axiom/axiom 
 | <a id="test-025"></a>TEST-025 | Saved feature reads back | integration | normal | implemented | [REQ-018](../product/requirements.md#req-018) | A saved feature reads back with its title and byte count. |
 | <a id="test-026"></a>TEST-026 | HTML escaped, unsafe links dropped | unit | refusal | implemented | [REQ-019](../product/requirements.md#req-019) | Script tags are escaped and javascript links removed. |
 | <a id="test-027"></a>TEST-027 | Link checked before rewriting | unit | refusal | implemented | [REQ-019](../product/requirements.md#req-019) | A javascript link is dropped even when a rewriter would make it safe. |
-| <a id="test-028"></a>TEST-028 | Status without secrets | integration | normal | implemented | [REQ-020](../product/requirements.md#req-020) | Status reports ready and max reasoning, with no key line. |
+| <a id="test-028"></a>TEST-028 | Status without secrets | integration | normal | implemented | [REQ-020](../product/requirements.md#req-020), [REQ-025](../product/requirements.md#req-025) | Status reports ready and max reasoning, with no key line. |
 | <a id="test-029"></a>TEST-029 | Unknown session not found | integration | refusal | implemented | [REQ-018](../product/requirements.md#req-018), [REQ-020](../product/requirements.md#req-020) | An unknown session is 404 without a traceback. |
 | <a id="test-030"></a>TEST-030 | Review needs a hypothesis | unit | refusal | implemented | [REQ-007](../product/requirements.md#req-007) | Opening a review before a hypothesis raises a refusal. |
 | <a id="test-031"></a>TEST-031 | Undeclared tool refused | unit | refusal | implemented | [REQ-004](../product/requirements.md#req-004) | Calling a tool the run did not declare is refused. |
@@ -55,6 +55,17 @@ Gate results are computed from `knowledge/spec/spec.json` by `tools/axiom/axiom 
 | <a id="test-033"></a>TEST-033 | Goldfish input numbered once | unit | normal | implemented | [REQ-001](../product/requirements.md#req-001), [REQ-007](../product/requirements.md#req-007) | A review input numbers only the range and carries the standard in one block. |
 | <a id="test-034"></a>TEST-034 | Owner question instead of a section | unit | normal | implemented | [REQ-009](../product/requirements.md#req-009) | An ask\_owner call turns the section into a question that cannot be approved. |
 | <a id="test-035"></a>TEST-035 | Repeated payload refused | unit | refusal | implemented | [REQ-001](../product/requirements.md#req-001) | A block equal to the message, or a non-conversation block containing a long message, is refused before any run. |
+| <a id="test-036"></a>TEST-036 | Failing patch not applied | integration | refusal | implemented | [REQ-005](../product/requirements.md#req-005), [REQ-021](../product/requirements.md#req-021) | A patch setting priority 7 and an object risk is refused as outside the schema until its attempts run out; spec.json keeps its bytes and the owner is told no change was applied. |
+| <a id="test-037"></a>TEST-037 | Breaking save refused | unit | refusal | implemented | [REQ-022](../product/requirements.md#req-022) | Saving a spec with a schema error or a dangling edge raises a refusal naming G01 or G02 and leaves the file unchanged. |
+| <a id="test-038"></a>TEST-038 | Gates after a schema failure unknown | unit | refusal | implemented | [REQ-023](../product/requirements.md#req-023) | With a schema error, G01 is error, G02 to G07 are unknown and the feature is not design-ready. |
+| <a id="test-039"></a>TEST-039 | Approval needs the catalog | integration | refusal | implemented | [REQ-024](../product/requirements.md#req-024) | Approving a ready feature while the catalog cannot be read is refused, naming AEION\_OBSERVABILITY, and writes no export. |
+| <a id="test-040"></a>TEST-040 | Export loads in the build factory's loader | contract | normal | implemented | [REQ-013](../product/requirements.md#req-013) | aeion-observability's own load\_manifest accepts a copy of its catalog with the exported file and row added, and the new feature's contract is current. |
+| <a id="test-041"></a>TEST-041 | Off-loopback host refused | unit | refusal | implemented | [REQ-025](../product/requirements.md#req-025) | AEION\_HOST set to 0.0.0.0, a LAN address, ::, a name or nothing raises ConfigError; loopback values load. |
+| <a id="test-042"></a>TEST-042 | Remote peer refused | integration | refusal | implemented | [REQ-025](../product/requirements.md#req-025) | A read and a valid write from peer 192.168.1.29 both get 403 and no feature is stored. |
+| <a id="test-043"></a>TEST-043 | Server body length bounded | integration | refusal | implemented | [REQ-026](../product/requirements.md#req-026) | A write with Content-Length -1 or abc gets 400, one over 2 MB gets 413, and nothing is stored. |
+| <a id="test-044"></a>TEST-044 | Gateway body length bounded | integration | refusal | implemented | [REQ-026](../product/requirements.md#req-026) | A relay request with Content-Length -1 or abc gets 400, one over 16 MB gets 413, and the upstream receives nothing. |
+| <a id="test-045"></a>TEST-045 | No response carries the key | integration | refusal | implemented | [REQ-003](../product/requirements.md#req-003), [REQ-020](../product/requirements.md#req-020) | With a sentinel key held by the real agent client, no page, API answer, refusal or header contains it. |
+| <a id="test-046"></a>TEST-046 | Checked patch applied | integration | normal | implemented | [REQ-021](../product/requirements.md#req-021) | A patch lowering a requirement's priority is accepted at once; spec.json holds the new value at the next revision. |
 
 ## Scenarios
 
@@ -65,40 +76,51 @@ Gate results are computed from `knowledge/spec/spec.json` by `tools/axiom/axiom 
 
 | Test | Result | Collected | Spec at execution | Matches current spec |
 | --- | --- | --- | --- | --- |
-| TEST-001 | pass | 1 | `18fa82886b67` | yes |
-| TEST-002 | pass | 1 | `18fa82886b67` | yes |
-| TEST-003 | pass | 1 | `18fa82886b67` | yes |
-| TEST-004 | pass | 1 | `18fa82886b67` | yes |
-| TEST-005 | pass | 1 | `18fa82886b67` | yes |
-| TEST-006 | pass | 1 | `18fa82886b67` | yes |
-| TEST-007 | pass | 1 | `18fa82886b67` | yes |
-| TEST-008 | pass | 1 | `18fa82886b67` | yes |
-| TEST-009 | pass | 1 | `18fa82886b67` | yes |
-| TEST-010 | pass | 1 | `18fa82886b67` | yes |
-| TEST-011 | pass | 1 | `18fa82886b67` | yes |
-| TEST-012 | pass | 1 | `18fa82886b67` | yes |
-| TEST-013 | pass | 1 | `18fa82886b67` | yes |
-| TEST-014 | pass | 1 | `18fa82886b67` | yes |
-| TEST-015 | pass | 1 | `18fa82886b67` | yes |
-| TEST-016 | pass | 1 | `18fa82886b67` | yes |
-| TEST-017 | pass | 1 | `18fa82886b67` | yes |
-| TEST-018 | pass | 1 | `18fa82886b67` | yes |
-| TEST-019 | pass | 1 | `18fa82886b67` | yes |
-| TEST-020 | pass | 1 | `18fa82886b67` | yes |
-| TEST-021 | pass | 1 | `18fa82886b67` | yes |
-| TEST-022 | pass | 1 | `18fa82886b67` | yes |
-| TEST-023 | pass | 1 | `18fa82886b67` | yes |
-| TEST-024 | pass | 1 | `18fa82886b67` | yes |
-| TEST-025 | pass | 1 | `18fa82886b67` | yes |
-| TEST-026 | pass | 1 | `18fa82886b67` | yes |
-| TEST-027 | pass | 1 | `18fa82886b67` | yes |
-| TEST-028 | pass | 1 | `18fa82886b67` | yes |
-| TEST-029 | pass | 1 | `18fa82886b67` | yes |
-| TEST-030 | pass | 1 | `18fa82886b67` | yes |
-| TEST-031 | pass | 1 | `18fa82886b67` | yes |
-| TEST-032 | pass | 1 | `18fa82886b67` | yes |
-| TEST-033 | pass | 1 | `18fa82886b67` | yes |
-| TEST-034 | pass | 1 | `18fa82886b67` | yes |
-| TEST-035 | pass | 1 | `18fa82886b67` | yes |
+| TEST-001 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-002 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-003 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-004 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-005 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-006 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-007 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-008 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-009 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-010 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-011 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-012 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-013 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-014 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-015 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-016 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-017 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-018 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-019 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-020 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-021 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-022 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-023 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-024 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-025 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-026 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-027 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-028 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-029 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-030 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-031 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-032 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-033 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-034 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-035 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-036 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-037 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-038 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-039 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-040 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-041 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-042 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-043 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-044 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-045 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-046 | pass | 1 | `c5cad4c1b4c2` | yes |
 
 Source-tree freshness is checked live by `tools/axiom/axiom evidence check`, not here.

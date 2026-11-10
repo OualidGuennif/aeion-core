@@ -1,10 +1,17 @@
 # Spec: knowledge/components/goldfish.md
 """The three sections with scripted agents: what each sends (once), what it accepts, and what it refuses."""
+import dataclasses
+import importlib.util
 import json
+import os
+import shutil
+import sys
+import tempfile
 import unittest
+from pathlib import Path
 
-from support import Workspace, events
-from aeion import brainstorm, design, docshub, goldfish, specstudio
+from support import Workspace, build_factory, events
+from aeion import brainstorm, config, design, docshub, goldfish, specstudio
 from aeion.store import StoreError
 
 FRAGMENT = {
@@ -44,6 +51,18 @@ FRAGMENT = {
 
 def submit(name, value):
     return {"calls": [(name, value)], "text": ""}
+
+
+def read_only_module(path):
+    """Import one file of another checkout without writing its bytecode cache (aeion-observability is read only)."""
+    spec = importlib.util.spec_from_file_location("build_factory_manifest", path)
+    module = importlib.util.module_from_spec(spec)
+    previous, sys.dont_write_bytecode = sys.dont_write_bytecode, True
+    try:
+        spec.loader.exec_module(module)
+    finally:
+        sys.dont_write_bytecode = previous
+    return module
 
 
 class BrainstormTests(unittest.TestCase):
@@ -143,11 +162,23 @@ class DesignTests(unittest.TestCase):
 
 class StudioTests(unittest.TestCase):
     def setUp(self):
-        self.ws = Workspace()
+        self.factory = build_factory(tempfile.mkdtemp(prefix="aeion-factory-"))
+        self.ws = Workspace(self.factory)
         self.feature = self.ws.store.save_feature("Saved searches", "# Saved searches\n\nMembers save searches.", "brief", "test")
 
     def tearDown(self):
         self.ws.close()
+        shutil.rmtree(self.factory, ignore_errors=True)
+
+    def spec_path(self):
+        return self.ws.store.product("demo-product") / "knowledge/spec/spec.json"
+
+    def ready(self):
+        session = self.draft(FRAGMENT)
+        session = specstudio.answer(self.ws.store, self.ws.agents, self.ws.settings, session["id"],
+                                    session["questions"][0]["id"], "One per member")
+        self.assertEqual(session["state"], "ready", session["checks"])
+        return session
 
     def draft(self, fragment):
         session = specstudio.create(self.ws.store, self.feature["id"], "demo-product")
@@ -193,10 +224,7 @@ class StudioTests(unittest.TestCase):
         self.assertEqual(sum(1 for n in spec["nodes"] if n["kind"] == "Requirement"), 2)
 
     def test_answers_then_approval_write_an_export_the_build_factory_accepts(self):
-        session = self.draft(FRAGMENT)
-        decision = session["questions"][0]
-        session = specstudio.answer(self.ws.store, self.ws.agents, self.ws.settings, session["id"], decision["id"], "One per member")
-        self.assertEqual(session["state"], "ready", session["checks"])
+        session = self.ready()
         approved = specstudio.approve(self.ws.store, self.ws.agents, self.ws.settings, session["id"])
         export = approved["export"]
         text = (self.ws.store.product("demo-product") / "exports" / export["file"]).read_text()
@@ -211,6 +239,91 @@ class StudioTests(unittest.TestCase):
         session = self.draft(FRAGMENT)
         with self.assertRaises(StoreError):
             specstudio.approve(self.ws.store, self.ws.agents, self.ws.settings, session["id"])
+        self.assertFalse((self.ws.store.product("demo-product") / "exports").exists())
+        spec = json.loads(self.spec_path().read_text())
+        self.assertEqual({n["status"] for n in spec["nodes"] if n["id"] in session["nodes"]}, {"draft"})
+
+    def test_approval_is_refused_while_the_build_factory_catalog_cannot_be_read(self):
+        session = self.ready()
+        offline = dataclasses.replace(self.ws.settings, observability=self.ws.folder / "missing")
+        with self.assertRaises(StoreError) as caught:
+            specstudio.approve(self.ws.store, self.ws.agents, offline, session["id"])
+        self.assertIn("AEION_OBSERVABILITY", str(caught.exception))
+        self.assertFalse((self.ws.store.product("demo-product") / "exports").exists())
+
+    def test_an_export_loads_in_the_build_factorys_own_catalog(self):
+        source = Path(os.environ.get("AEION_OBSERVABILITY") or config.ROOT.parent / "aeion-observability")
+        loader = source / "demo/factory/manifest.py"
+        if not loader.is_file():
+            self.skipTest(f"no aeion-observability checkout at {source}")
+        # A copy of the real catalog, so the build factory's checkout is only ever read.
+        copy = self.ws.folder / "observability/demo/forum"
+        shutil.copytree(source / "demo/forum/features", copy / "features")
+        shutil.copy2(source / "demo/forum/ARCHITECTURE.md", copy / "ARCHITECTURE.md")
+        settings = dataclasses.replace(self.ws.settings, observability=self.ws.folder / "observability")
+        session = self.ready()
+        export = specstudio.approve(self.ws.store, self.ws.agents, settings, session["id"])["export"]
+        shutil.copy2(self.ws.store.product("demo-product") / "exports" / export["file"], copy / "features" / export["file"])
+        manifest = json.loads((copy / "features/MANIFEST.json").read_text())
+        manifest["features"].append(export["row"])
+        manifest["count"] += 1
+        (copy / "features/MANIFEST.json").write_text(json.dumps(manifest))
+        catalog = read_only_module(loader).load_manifest(copy / "features/MANIFEST.json")
+        self.assertIn(export["row"]["id"], catalog.by_id)
+        self.assertTrue(catalog.contract_current(export["row"]["id"]))
+
+    def test_a_checked_patch_is_applied_and_saved(self):
+        session = self.draft(FRAGMENT)
+        spec = json.loads(self.spec_path().read_text())
+        requirement = next(n for n in spec["nodes"] if n["kind"] == "Requirement" and n["title"] == "Refuse a 21st search")
+        patch = {"note": "lower the priority", "update": [{"id": requirement["id"], "fields": {"priority": "should"}}],
+                 "add": {}, "drop": []}
+        self.ws.agents.script("patcher", submit("submit_patch", patch))
+        session = specstudio.change(self.ws.store, self.ws.agents, self.ws.settings, session["id"], "lower the priority")
+        self.assertEqual(self.ws.agents.last_outputs, ["Accepted."])
+        stored = next(n for n in json.loads(self.spec_path().read_text())["nodes"] if n["id"] == requirement["id"])
+        self.assertEqual((stored["data"]["priority"], stored["revision"]), ("should", requirement["revision"] + 1))
+        self.assertIn("Change applied (1 updated", session["messages"][-1]["content"])
+
+    def test_a_patch_that_still_fails_its_checks_is_not_applied(self):
+        session = self.draft(FRAGMENT)
+        before = self.spec_path().read_bytes()
+        requirement = next(n["id"] for n in json.loads(before)["nodes"] if n["kind"] == "Requirement")
+        bad = {"note": "reprioritize", "update": [{"id": requirement, "fields": {"priority": 7, "risk": {"nested": True}}}],
+               "add": {}, "drop": []}
+        self.ws.agents.script("patcher", {"calls": [("submit_patch", bad)] * 4, "text": ""})
+        session = specstudio.change(self.ws.store, self.ws.agents, self.ws.settings, session["id"], "reprioritize")
+        outputs = self.ws.agents.last_outputs
+        self.assertIn(f"{requirement}.priority: the value does not fit the AxiomSpec schema", outputs[0])
+        self.assertIn("Recorded with 2 open problem(s)", outputs[-1])
+        self.assertEqual(self.spec_path().read_bytes(), before)
+        self.assertIn("No change was applied", session["messages"][-1]["content"])
+        self.assertEqual(session["checks"]["gates"]["G01"], "pass")
+
+    def test_a_save_that_would_break_the_specification_is_refused(self):
+        session = self.draft(FRAGMENT)
+        stored = self.ws.store.session(session["id"], "studio")
+        before = self.spec_path().read_bytes()
+        broken = json.loads(before)
+        next(n for n in broken["nodes"] if n["kind"] == "Requirement")["data"]["priority"] = 7
+        with self.assertRaises(StoreError) as caught:
+            specstudio._save_spec(self.ws.store, stored, broken)
+        self.assertIn("G01 SCHEMA", str(caught.exception))
+        dangling = json.loads(before)
+        dangling["edges"].append(dict(dangling["edges"][0], id="EDGE-999", to="REQ-999"))
+        with self.assertRaises(StoreError) as caught:
+            specstudio._save_spec(self.ws.store, stored, dangling)
+        self.assertIn("G02 UNKNOWN_TARGET", str(caught.exception))
+        self.assertEqual(self.spec_path().read_bytes(), before)
+
+    def test_gates_that_did_not_run_are_unknown(self):
+        session = self.draft(FRAGMENT)
+        broken = json.loads(self.spec_path().read_text())
+        next(n for n in broken["nodes"] if n["kind"] == "Requirement")["data"]["priority"] = 7
+        checks = specstudio.evaluate(self.ws.settings, self.ws.store.session(session["id"], "studio"), broken)
+        self.assertEqual(checks["gates"]["G01"], "error")
+        self.assertEqual({checks["gates"][g] for g in ("G02", "G03", "G04", "G05", "G06", "G07")}, {"unknown"})
+        self.assertFalse(checks["design_ready"])
 
     def test_patch_may_relink_a_test_but_never_answer_a_decision(self):
         session = self.draft(FRAGMENT)

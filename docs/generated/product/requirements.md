@@ -85,7 +85,7 @@ functional · must · risk high · verification executable · status active · r
 
 data · must · risk high · verification executable · status active · revision 1
 
-- Tests: [TEST-015](../verification/index.md#test-015), [TEST-016](../verification/index.md#test-016)
+- Tests: [TEST-015](../verification/index.md#test-015), [TEST-016](../verification/index.md#test-016), [TEST-040](../verification/index.md#test-040)
 - Components: [COMP-004](../system/components.md#comp-004)
 
 <a id="req-014"></a>
@@ -96,6 +96,46 @@ data · must · risk high · verification executable · status active · revisio
 security · must · risk high · verification executable · status active · revision 1
 
 - Tests: [TEST-017](../verification/index.md#test-017), [TEST-018](../verification/index.md#test-018)
+- Components: [COMP-004](../system/components.md#comp-004)
+
+<a id="req-021"></a>
+### REQ-021 Apply only a checked patch
+
+> If a patch still fails its checks when its attempts run out, or sets a value outside the AxiomSpec schema, then the spec studio shall leave the specification unchanged and tell the owner which check still fails.
+
+data · must · risk high · verification executable · status active · revision 1
+
+- Tests: [TEST-036](../verification/index.md#test-036), [TEST-046](../verification/index.md#test-046)
+- Components: [COMP-004](../system/components.md#comp-004)
+
+<a id="req-022"></a>
+### REQ-022 Never save what the gates refuse
+
+> If a save would add a strict JSON, schema, reference or BCIR error, then the spec studio shall refuse the save and leave the stored specification unchanged.
+
+data · must · risk high · verification executable · status active · revision 1
+
+- Tests: [TEST-015](../verification/index.md#test-015), [TEST-037](../verification/index.md#test-037)
+- Components: [COMP-004](../system/components.md#comp-004)
+
+<a id="req-023"></a>
+### REQ-023 Report gates that did not run as unknown
+
+> If the schema check fails, then the spec studio shall report the other design gates as unknown and the feature as not ready.
+
+functional · must · risk medium · verification executable · status active · revision 1
+
+- Tests: [TEST-038](../verification/index.md#test-038)
+- Components: [COMP-004](../system/components.md#comp-004)
+
+<a id="req-024"></a>
+### REQ-024 Approve only against the build factory's catalog
+
+> If the aeion-observability catalog cannot be read, then the spec studio shall refuse the approval and name the setting to fix.
+
+data · must · risk high · verification executable · status active · revision 1
+
+- Tests: [TEST-015](../verification/index.md#test-015), [TEST-039](../verification/index.md#test-039)
 - Components: [COMP-004](../system/components.md#comp-004)
 
 ## GOAL-003 Answer documentation questions with checkable citations
@@ -153,7 +193,7 @@ functional · must · risk medium · verification executable · status active ·
 
 security · must · risk critical · verification executable · status active · revision 1
 
-- Tests: [TEST-002](../verification/index.md#test-002), [TEST-003](../verification/index.md#test-003), [TEST-004](../verification/index.md#test-004)
+- Tests: [TEST-002](../verification/index.md#test-002), [TEST-003](../verification/index.md#test-003), [TEST-004](../verification/index.md#test-004), [TEST-045](../verification/index.md#test-045)
 - Components: [COMP-002](../system/components.md#comp-002)
 
 <a id="req-004"></a>
@@ -175,7 +215,7 @@ data · must · risk high · verification executable · status active · revisio
 functional · must · risk medium · verification executable · status active · revision 1
 
 - Terms: [TERM-002](terms.md#term-002)
-- Tests: [TEST-006](../verification/index.md#test-006), [TEST-007](../verification/index.md#test-007), [TEST-016](../verification/index.md#test-016), [TEST-018](../verification/index.md#test-018), [TEST-032](../verification/index.md#test-032)
+- Tests: [TEST-006](../verification/index.md#test-006), [TEST-007](../verification/index.md#test-007), [TEST-016](../verification/index.md#test-016), [TEST-018](../verification/index.md#test-018), [TEST-032](../verification/index.md#test-032), [TEST-036](../verification/index.md#test-036)
 - Components: [COMP-002](../system/components.md#comp-002)
 
 ## GOAL-005 Keep the local application safe
@@ -217,5 +257,25 @@ security · must · risk high · verification executable · status active · rev
 
 security · must · risk medium · verification executable · status active · revision 1
 
-- Tests: [TEST-028](../verification/index.md#test-028), [TEST-029](../verification/index.md#test-029)
+- Tests: [TEST-028](../verification/index.md#test-028), [TEST-029](../verification/index.md#test-029), [TEST-045](../verification/index.md#test-045)
 - Components: [COMP-001](../system/components.md#comp-001)
+
+<a id="req-025"></a>
+### REQ-025 Serve this machine only
+
+> If the configured host is not a loopback address, or a request comes from another machine, then the web server shall refuse to start, or refuse the request with status 403.
+
+security · must · risk critical · verification executable · status active · revision 1
+
+- Tests: [TEST-028](../verification/index.md#test-028), [TEST-041](../verification/index.md#test-041), [TEST-042](../verification/index.md#test-042)
+- Components: [COMP-001](../system/components.md#comp-001)
+
+<a id="req-026"></a>
+### REQ-026 Bound every request body
+
+> If a request's Content-Length is not plain digits or exceeds the limit, then the web server and gateway shall refuse the request with status 400 or 413 before reading its body.
+
+security · must · risk high · verification executable · status active · revision 1
+
+- Tests: [TEST-002](../verification/index.md#test-002), [TEST-043](../verification/index.md#test-043), [TEST-044](../verification/index.md#test-044)
+- Components: [COMP-001](../system/components.md#comp-001), [COMP-002](../system/components.md#comp-002)

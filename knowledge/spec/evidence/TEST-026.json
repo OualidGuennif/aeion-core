@@ -13,7 +13,7 @@
     }
   ],
   "bound_files": {
-    "app/tests/test_engine.py": "d46cc78a12ed30810b57f4ef5231f745fbce2ab78b46eb6b099ebfc9a0be7558"
+    "app/tests/test_engine.py": "75024816c28b451ca72d9ea83e99cffdd0b318ac400ff289ed92b6710768c7d3"
   },
   "results": {
     "app/tests/test_engine.py::MarkdownTests.test_html_is_escaped_and_unsafe_links_are_dropped": "pass"
@@ -27,8 +27,8 @@
   },
   "problems": [],
   "status": "pass",
-  "spec_sha256": "18fa82886b67ff7b7f9ad273cbb40f012a139eb6d9a1d7ee2bfc6e23e91e64eb",
-  "source_tree_sha256": "956bb4b9cbe7fb5e0e154e9c365ddc76ff88a79625e4d9a6382090a478d14368",
+  "spec_sha256": "c5cad4c1b4c28c89e5267021d365d76182fa39c2a3cf3ce5e01b3da51c9f1d74",
+  "source_tree_sha256": "978d075995a341c7271e49e7efa9998e90e821dc27eb8a2066eb882386fd0e7f",
   "raw_output_sha256": "0d5348527f067d693a29a1a559ec90d0b40437b4a86daf776cbb8fb0cddcaae2",
-  "executed_at": "2026-11-10T15:21:31.112161+00:00"
+  "executed_at": "2026-11-10T15:42:46.389958+00:00"
 }

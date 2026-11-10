@@ -3,9 +3,11 @@
 scripted upstream proving that each piece of input reaches the model exactly once, at maximum reasoning."""
 import json
 import shutil
+import socket
 import unittest
 import urllib.error
 import urllib.request
+from urllib.parse import urlparse
 
 from support import Upstream, finish, text_chunk, tool_chunk  # noqa: F401  (support sets the import path)
 from aeion import agents, config, llm
@@ -94,6 +96,16 @@ class GatewayTests(unittest.TestCase):
     def test_unknown_token_and_other_model_are_refused_before_the_upstream(self):
         self.assertEqual(post(f"{self.base}/v1/chat/completions", {"model": "deepseek-v4.1-flash"}, "nope")[0], 401)
         self.assertEqual(post(f"{self.base}/v1/chat/completions", {"model": "other-model"}, "run-token")[0], 400)
+        self.assertEqual(self.upstream.requests, [])
+
+    def test_a_body_length_that_is_not_a_bounded_number_is_refused(self):
+        address = urlparse(self.base)
+        for length, status in (("-1", 400), ("abc", 400), (str(17 * 1024 * 1024), 413)):
+            head = (f"POST /v1/chat/completions HTTP/1.1\r\nHost: {address.netloc}\r\nAuthorization: Bearer run-token\r\n"
+                    f"Content-Type: application/json\r\nContent-Length: {length}\r\n\r\n{{}}").encode()
+            with socket.create_connection((address.hostname, address.port), timeout=10) as connection:
+                connection.sendall(head)
+                self.assertEqual(int(connection.recv(65536).split(b" ", 2)[1]), status, length)
         self.assertEqual(self.upstream.requests, [])
 
     def test_bridge_runs_a_registered_tool_and_reports_refusals(self):

@@ -1,0 +1,34 @@
+{
+  "format": "aeion-test-receipt/0.1",
+  "test_id": "TEST-046",
+  "level": "integration",
+  "adapter": "unittest/3.0.0",
+  "python": "3.15.2",
+  "trust": "untrusted_local",
+  "bindings": [
+    {
+      "id": "BIND-036",
+      "path": "app/tests/test_sections.py",
+      "symbol": "StudioTests.test_a_checked_patch_is_applied_and_saved"
+    }
+  ],
+  "bound_files": {
+    "app/tests/test_sections.py": "6e29fb8cc3b438ea85f6512ea79e70ed9606ba6ae8c8a6def210239f960eecfb"
+  },
+  "results": {
+    "app/tests/test_sections.py::StudioTests.test_a_checked_patch_is_applied_and_saved": "pass"
+  },
+  "counts": {
+    "collected": 1,
+    "passed": 1,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "problems": [],
+  "status": "pass",
+  "spec_sha256": "c5cad4c1b4c28c89e5267021d365d76182fa39c2a3cf3ce5e01b3da51c9f1d74",
+  "source_tree_sha256": "978d075995a341c7271e49e7efa9998e90e821dc27eb8a2066eb882386fd0e7f",
+  "raw_output_sha256": "bb7697e5f8921b4d0f2a50593158b715f2e1c60ef4348039cf8bf26a7d432170",
+  "executed_at": "2026-11-10T15:42:49.268707+00:00"
+}

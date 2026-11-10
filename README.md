@@ -30,7 +30,7 @@ python3 app/serve                          # http://127.0.0.1:8765
 
 `AEION_LLM=mock python3 app/serve` runs offline with scripted agents. Settings: `AEION_DATA`
 (workspace, default `workspace/`), `AEION_OBSERVABILITY` (default `../aeion-observability`, read only),
-`AEION_PORT`, `AEION_HOST`, `AEION_MODEL`.
+`AEION_PORT`, `AEION_HOST` (a loopback address only), `AEION_MODEL`. The server answers this machine only.
 
 ## How it is built
 
