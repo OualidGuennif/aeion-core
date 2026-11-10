@@ -12,6 +12,6 @@ dates them at release time. Spec: knowledge/policies/engineering.md
 - Hardened before the first push, from an independent review: a patch that still fails its checks is not
   applied and a value outside the AxiomSpec schema is never stored; nothing `axiom check` would refuse is
   saved; gates that did not run are `unknown`; approval needs aeion-observability's catalog; the server
-  binds and answers loopback only; a malformed or oversized `Content-Length` is refused on the server and
+  binds and answers loopback only (IPv4 or IPv6); a malformed or oversized `Content-Length` is refused on the server and
   the gateway. New tests prove the key never reaches a response and an export loads in
   aeion-observability's own catalog loader.

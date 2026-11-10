@@ -7,13 +7,13 @@
   "trust": "untrusted_local",
   "bindings": [
     {
-      "id": "BIND-043",
+      "id": "BIND-044",
       "path": "app/tests/test_engine.py",
       "symbol": "ServerTests.test_a_body_length_that_is_not_a_bounded_number_is_refused"
     }
   ],
   "bound_files": {
-    "app/tests/test_engine.py": "75024816c28b451ca72d9ea83e99cffdd0b318ac400ff289ed92b6710768c7d3"
+    "app/tests/test_engine.py": "f9ead3292f7be85d61fd8eee0fb698d1da92b5a3812dd2ba8896b61ced8dafe2"
   },
   "results": {
     "app/tests/test_engine.py::ServerTests.test_a_body_length_that_is_not_a_bounded_number_is_refused": "pass"
@@ -27,8 +27,8 @@
   },
   "problems": [],
   "status": "pass",
-  "spec_sha256": "c5cad4c1b4c28c89e5267021d365d76182fa39c2a3cf3ce5e01b3da51c9f1d74",
-  "source_tree_sha256": "978d075995a341c7271e49e7efa9998e90e821dc27eb8a2066eb882386fd0e7f",
+  "spec_sha256": "8f34efcddba640dc4d6c83ce37b46f5c6275b5d35a13444c2003080aac1f9e73",
+  "source_tree_sha256": "a15eaa8b40f6c5454ff486f4603d4f1672da03903d0282d492e2c444acd4b20e",
   "raw_output_sha256": "4187aff763dd7214e1e19ae57a59cf301d7248746e0329ced529969f3dbc14ac",
-  "executed_at": "2026-11-10T15:42:51.529751+00:00"
+  "executed_at": "2026-11-10T15:47:30.461395+00:00"
 }

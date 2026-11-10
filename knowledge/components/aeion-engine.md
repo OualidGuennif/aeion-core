@@ -55,8 +55,8 @@ specifications and exports (`workspace/products/<name>`), all written atomically
 
 ## Invariants
 
-- The server binds a loopback address only, answers loopback peers only (403 otherwise), and refuses a
-  foreign `Host` header (DNS rebinding).
+- The server binds a loopback address only (IPv6 for `::1`), answers loopback peers only (403
+  otherwise), and refuses a foreign `Host` header (DNS rebinding).
 - A write without the custom header or a JSON body is refused (cross-site requests).
 - A name becomes a path only after `[a-z0-9][a-z0-9-]{0,79}` matches it.
 - The key, a stack trace or provider internals never reach a response.

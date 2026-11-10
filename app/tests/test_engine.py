@@ -79,6 +79,39 @@ class MarkdownTests(unittest.TestCase):
         self.assertNotIn("#/docs/safe", html)
 
 
+def ipv6_loopback():
+    """Whether this machine has an IPv6 loopback at all, probed without the code under test."""
+    try:
+        with socket.socket(socket.AF_INET6) as probe:
+            probe.bind(("::1", 0))
+        return True
+    except OSError:
+        return False
+
+
+class BindTests(unittest.TestCase):
+    def test_every_accepted_loopback_host_binds_and_answers(self):
+        ws = Workspace()
+        handler = type("TestHandler", (server.Handler,), {"app": server.App(ws.settings, client=ws.agents)})
+        try:
+            hosts = [("127.0.0.1", socket.AF_INET), ("localhost", socket.AF_INET)]
+            hosts += [("::1", socket.AF_INET6)] if ipv6_loopback() else []
+            for host, family in hosts:
+                httpd = server.bind(host, 0, handler)
+                threading.Thread(target=httpd.serve_forever, daemon=True).start()
+                try:
+                    port = httpd.server_address[1]
+                    address = "[::1]" if family == socket.AF_INET6 else "127.0.0.1"
+                    with socket.create_connection((address.strip("[]"), port), timeout=10) as connection:
+                        connection.sendall(f"GET /api/status HTTP/1.1\r\nHost: {address}:{port}\r\n\r\n".encode())
+                        self.assertEqual(int(connection.recv(65536).split(b" ", 2)[1]), 200, host)
+                finally:
+                    httpd.shutdown()
+                    httpd.server_close()
+        finally:
+            ws.close()
+
+
 class ServerTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):

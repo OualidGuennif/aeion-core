@@ -4,7 +4,7 @@
 
 Scope: A local web application that takes a feature from brainstorm to an AxiomSpec specification and the feature file aeion-observability builds, with cited documentation.
 
-Specification baseline: `c5cad4c1b4c28c89e5267021d365d76182fa39c2a3cf3ce5e01b3da51c9f1d74` (product, `axiomspec/0.1`, `AX-CORE-0.1`)  
+Specification baseline: `8f34efcddba640dc4d6c83ce37b46f5c6275b5d35a13444c2003080aac1f9e73` (product, `axiomspec/0.1`, `AX-CORE-0.1`)  
 Documentation build: `aeion-docs/3.0.0`, regenerate with `tools/axiom/axiom docs`  
 Design readiness: **pass** (gates G01-G07; see [verification](generated/verification/index.md))
 
@@ -32,7 +32,7 @@ No view yet: add one to `docs/view-catalog.json` with its source in `docs/views/
 | Artifact structure | pass (G01) |
 | Business decisions | 0 open |
 | Formal semantics | G03 pass, G06 pass on declared scenarios |
-| Product tests | 46 receipt(s); freshness: `tools/axiom/axiom evidence check` |
+| Product tests | 47 receipt(s); freshness: `tools/axiom/axiom evidence check` |
 | Operational behaviour | not observed (G13 unsupported) |
 
-Contents: 1 Assumption, 5 Component, 1 Decision, 5 Goal, 26 Requirement, 2 Term, 46 TestCase.
+Contents: 1 Assumption, 5 Component, 1 Decision, 5 Goal, 26 Requirement, 2 Term, 47 TestCase.

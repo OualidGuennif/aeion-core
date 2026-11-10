@@ -1558,6 +1558,26 @@
       }
     },
     {
+      "id": "TEST-047",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Every loopback host serves",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "127.0.0.1 and localhost bind IPv4 and ::1 binds IPv6 (where the machine has it), and each answers its status request.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": false,
+        "witness_scenario_ids": []
+      }
+    },
+    {
       "id": "TEST-042",
       "kind": "TestCase",
       "revision": 1,
@@ -2489,7 +2509,7 @@
     },
     {
       "id": "EDGE-085",
-      "from": "TEST-042",
+      "from": "TEST-047",
       "relation": "verifies",
       "to": "REQ-025",
       "origin": "declared",
@@ -2497,6 +2517,14 @@
     },
     {
       "id": "EDGE-086",
+      "from": "TEST-042",
+      "relation": "verifies",
+      "to": "REQ-025",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-087",
       "from": "TEST-043",
       "relation": "verifies",
       "to": "REQ-026",
@@ -2504,7 +2532,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-087",
+      "id": "EDGE-088",
       "from": "TEST-044",
       "relation": "verifies",
       "to": "REQ-026",
@@ -2512,7 +2540,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-088",
+      "id": "EDGE-089",
       "from": "TEST-045",
       "relation": "verifies",
       "to": "REQ-020",
@@ -2520,7 +2548,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-089",
+      "id": "EDGE-090",
       "from": "TEST-045",
       "relation": "verifies",
       "to": "REQ-003",
@@ -2528,7 +2556,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-090",
+      "id": "EDGE-091",
       "from": "TEST-034",
       "relation": "verifies",
       "to": "REQ-009",
@@ -2536,7 +2564,7 @@
       "rationale": "The test observes this obligation."
     },
     {
-      "id": "EDGE-091",
+      "id": "EDGE-092",
       "from": "COMP-001",
       "relation": "implements",
       "to": "REQ-017",
@@ -2544,7 +2572,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-092",
+      "id": "EDGE-093",
       "from": "COMP-001",
       "relation": "implements",
       "to": "REQ-018",
@@ -2552,7 +2580,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-093",
+      "id": "EDGE-094",
       "from": "COMP-001",
       "relation": "implements",
       "to": "REQ-019",
@@ -2560,7 +2588,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-094",
+      "id": "EDGE-095",
       "from": "COMP-001",
       "relation": "implements",
       "to": "REQ-020",
@@ -2568,7 +2596,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-095",
+      "id": "EDGE-096",
       "from": "COMP-001",
       "relation": "implements",
       "to": "REQ-025",
@@ -2576,7 +2604,7 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-096",
+      "id": "EDGE-097",
       "from": "COMP-001",
       "relation": "implements",
       "to": "REQ-026",
@@ -2584,18 +2612,10 @@
       "rationale": "The component is where this obligation is realized."
     },
     {
-      "id": "EDGE-097",
-      "from": "COMP-002",
-      "relation": "implements",
-      "to": "REQ-001",
-      "origin": "declared",
-      "rationale": "The component is where this obligation is realized."
-    },
-    {
       "id": "EDGE-098",
       "from": "COMP-002",
       "relation": "implements",
-      "to": "REQ-002",
+      "to": "REQ-001",
       "origin": "declared",
       "rationale": "The component is where this obligation is realized."
     },
@@ -2603,7 +2623,7 @@
       "id": "EDGE-099",
       "from": "COMP-002",
       "relation": "implements",
-      "to": "REQ-003",
+      "to": "REQ-002",
       "origin": "declared",
       "rationale": "The component is where this obligation is realized."
     },
@@ -2611,7 +2631,7 @@
       "id": "EDGE-100",
       "from": "COMP-002",
       "relation": "implements",
-      "to": "REQ-004",
+      "to": "REQ-003",
       "origin": "declared",
       "rationale": "The component is where this obligation is realized."
     },
@@ -2619,7 +2639,7 @@
       "id": "EDGE-101",
       "from": "COMP-002",
       "relation": "implements",
-      "to": "REQ-005",
+      "to": "REQ-004",
       "origin": "declared",
       "rationale": "The component is where this obligation is realized."
     },
@@ -2627,15 +2647,15 @@
       "id": "EDGE-102",
       "from": "COMP-002",
       "relation": "implements",
-      "to": "REQ-026",
+      "to": "REQ-005",
       "origin": "declared",
       "rationale": "The component is where this obligation is realized."
     },
     {
       "id": "EDGE-103",
-      "from": "COMP-003",
+      "from": "COMP-002",
       "relation": "implements",
-      "to": "REQ-006",
+      "to": "REQ-026",
       "origin": "declared",
       "rationale": "The component is where this obligation is realized."
     },
@@ -2643,7 +2663,7 @@
       "id": "EDGE-104",
       "from": "COMP-003",
       "relation": "implements",
-      "to": "REQ-007",
+      "to": "REQ-006",
       "origin": "declared",
       "rationale": "The component is where this obligation is realized."
     },
@@ -2651,7 +2671,7 @@
       "id": "EDGE-105",
       "from": "COMP-003",
       "relation": "implements",
-      "to": "REQ-008",
+      "to": "REQ-007",
       "origin": "declared",
       "rationale": "The component is where this obligation is realized."
     },
@@ -2659,15 +2679,15 @@
       "id": "EDGE-106",
       "from": "COMP-003",
       "relation": "implements",
-      "to": "REQ-009",
+      "to": "REQ-008",
       "origin": "declared",
       "rationale": "The component is where this obligation is realized."
     },
     {
       "id": "EDGE-107",
-      "from": "COMP-004",
+      "from": "COMP-003",
       "relation": "implements",
-      "to": "REQ-010",
+      "to": "REQ-009",
       "origin": "declared",
       "rationale": "The component is where this obligation is realized."
     },
@@ -2675,7 +2695,7 @@
       "id": "EDGE-108",
       "from": "COMP-004",
       "relation": "implements",
-      "to": "REQ-011",
+      "to": "REQ-010",
       "origin": "declared",
       "rationale": "The component is where this obligation is realized."
     },
@@ -2683,7 +2703,7 @@
       "id": "EDGE-109",
       "from": "COMP-004",
       "relation": "implements",
-      "to": "REQ-012",
+      "to": "REQ-011",
       "origin": "declared",
       "rationale": "The component is where this obligation is realized."
     },
@@ -2691,7 +2711,7 @@
       "id": "EDGE-110",
       "from": "COMP-004",
       "relation": "implements",
-      "to": "REQ-013",
+      "to": "REQ-012",
       "origin": "declared",
       "rationale": "The component is where this obligation is realized."
     },
@@ -2699,7 +2719,7 @@
       "id": "EDGE-111",
       "from": "COMP-004",
       "relation": "implements",
-      "to": "REQ-014",
+      "to": "REQ-013",
       "origin": "declared",
       "rationale": "The component is where this obligation is realized."
     },
@@ -2707,7 +2727,7 @@
       "id": "EDGE-112",
       "from": "COMP-004",
       "relation": "implements",
-      "to": "REQ-021",
+      "to": "REQ-014",
       "origin": "declared",
       "rationale": "The component is where this obligation is realized."
     },
@@ -2715,7 +2735,7 @@
       "id": "EDGE-113",
       "from": "COMP-004",
       "relation": "implements",
-      "to": "REQ-022",
+      "to": "REQ-021",
       "origin": "declared",
       "rationale": "The component is where this obligation is realized."
     },
@@ -2723,7 +2743,7 @@
       "id": "EDGE-114",
       "from": "COMP-004",
       "relation": "implements",
-      "to": "REQ-023",
+      "to": "REQ-022",
       "origin": "declared",
       "rationale": "The component is where this obligation is realized."
     },
@@ -2731,15 +2751,15 @@
       "id": "EDGE-115",
       "from": "COMP-004",
       "relation": "implements",
-      "to": "REQ-024",
+      "to": "REQ-023",
       "origin": "declared",
       "rationale": "The component is where this obligation is realized."
     },
     {
       "id": "EDGE-116",
-      "from": "COMP-005",
+      "from": "COMP-004",
       "relation": "implements",
-      "to": "REQ-015",
+      "to": "REQ-024",
       "origin": "declared",
       "rationale": "The component is where this obligation is realized."
     },
@@ -2747,12 +2767,20 @@
       "id": "EDGE-117",
       "from": "COMP-005",
       "relation": "implements",
-      "to": "REQ-016",
+      "to": "REQ-015",
       "origin": "declared",
       "rationale": "The component is where this obligation is realized."
     },
     {
       "id": "EDGE-118",
+      "from": "COMP-005",
+      "relation": "implements",
+      "to": "REQ-016",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-119",
       "from": "REQ-001",
       "relation": "uses_term",
       "to": "TERM-001",
@@ -2760,7 +2788,7 @@
       "rationale": "The wording relies on this defined term."
     },
     {
-      "id": "EDGE-119",
+      "id": "EDGE-120",
       "from": "REQ-002",
       "relation": "uses_term",
       "to": "TERM-001",
@@ -2768,7 +2796,7 @@
       "rationale": "The wording relies on this defined term."
     },
     {
-      "id": "EDGE-120",
+      "id": "EDGE-121",
       "from": "REQ-004",
       "relation": "uses_term",
       "to": "TERM-002",
@@ -2776,7 +2804,7 @@
       "rationale": "The wording relies on this defined term."
     },
     {
-      "id": "EDGE-121",
+      "id": "EDGE-122",
       "from": "REQ-005",
       "relation": "uses_term",
       "to": "TERM-002",
@@ -2784,7 +2812,7 @@
       "rationale": "The wording relies on this defined term."
     },
     {
-      "id": "EDGE-122",
+      "id": "EDGE-123",
       "from": "DEC-001",
       "relation": "governs",
       "to": "REQ-001",
@@ -2792,7 +2820,7 @@
       "rationale": "The decision fixes how this is met."
     },
     {
-      "id": "EDGE-123",
+      "id": "EDGE-124",
       "from": "DEC-001",
       "relation": "governs",
       "to": "REQ-002",
@@ -2800,7 +2828,7 @@
       "rationale": "The decision fixes how this is met."
     },
     {
-      "id": "EDGE-124",
+      "id": "EDGE-125",
       "from": "REQ-001",
       "relation": "assumes",
       "to": "ASM-001",
@@ -3181,6 +3209,15 @@
     {
       "id": "BIND-042",
       "kind": "test",
+      "node_id": "TEST-047",
+      "path": "app/tests/test_engine.py",
+      "symbol": "BindTests.test_every_accepted_loopback_host_binds_and_answers",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-043",
+      "kind": "test",
       "node_id": "TEST-042",
       "path": "app/tests/test_engine.py",
       "symbol": "ServerTests.test_a_peer_on_another_machine_is_refused",
@@ -3188,7 +3225,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-043",
+      "id": "BIND-044",
       "kind": "test",
       "node_id": "TEST-043",
       "path": "app/tests/test_engine.py",
@@ -3197,7 +3234,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-044",
+      "id": "BIND-045",
       "kind": "test",
       "node_id": "TEST-044",
       "path": "app/tests/test_agents.py",
@@ -3206,7 +3243,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-045",
+      "id": "BIND-046",
       "kind": "test",
       "node_id": "TEST-045",
       "path": "app/tests/test_engine.py",
@@ -3215,7 +3252,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-046",
+      "id": "BIND-047",
       "kind": "test",
       "node_id": "TEST-034",
       "path": "app/tests/test_sections.py",
@@ -3224,7 +3261,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-047",
+      "id": "BIND-048",
       "kind": "code",
       "node_id": "COMP-001",
       "path": "app/aeion/server.py",
@@ -3233,7 +3270,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-048",
+      "id": "BIND-049",
       "kind": "code",
       "node_id": "COMP-001",
       "path": "app/aeion/store.py",
@@ -3242,7 +3279,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-049",
+      "id": "BIND-050",
       "kind": "code",
       "node_id": "COMP-001",
       "path": "app/aeion/markdown.py",
@@ -3251,7 +3288,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-050",
+      "id": "BIND-051",
       "kind": "code",
       "node_id": "COMP-001",
       "path": "app/aeion/config.py",
@@ -3260,7 +3297,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-051",
+      "id": "BIND-052",
       "kind": "code",
       "node_id": "COMP-002",
       "path": "app/aeion/agents.py",
@@ -3269,7 +3306,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-052",
+      "id": "BIND-053",
       "kind": "code",
       "node_id": "COMP-002",
       "path": "app/aeion/agents.py",
@@ -3278,7 +3315,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-053",
+      "id": "BIND-054",
       "kind": "code",
       "node_id": "COMP-002",
       "path": "app/aeion/agents.py",
@@ -3287,7 +3324,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-054",
+      "id": "BIND-055",
       "kind": "code",
       "node_id": "COMP-002",
       "path": "app/aeion/agents.py",
@@ -3296,7 +3333,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-055",
+      "id": "BIND-056",
       "kind": "code",
       "node_id": "COMP-003",
       "path": "app/aeion/brainstorm.py",
@@ -3305,7 +3342,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-056",
+      "id": "BIND-057",
       "kind": "code",
       "node_id": "COMP-003",
       "path": "app/aeion/goldfish/__init__.py",
@@ -3314,7 +3351,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-057",
+      "id": "BIND-058",
       "kind": "code",
       "node_id": "COMP-003",
       "path": "app/aeion/design.py",
@@ -3323,7 +3360,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-058",
+      "id": "BIND-059",
       "kind": "code",
       "node_id": "COMP-004",
       "path": "app/aeion/specstudio.py",
@@ -3332,7 +3369,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-059",
+      "id": "BIND-060",
       "kind": "code",
       "node_id": "COMP-004",
       "path": "app/aeion/specstudio.py",
@@ -3341,7 +3378,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-060",
+      "id": "BIND-061",
       "kind": "code",
       "node_id": "COMP-004",
       "path": "app/aeion/specstudio.py",
@@ -3350,7 +3387,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-061",
+      "id": "BIND-062",
       "kind": "code",
       "node_id": "COMP-004",
       "path": "app/aeion/specstudio.py",
@@ -3359,7 +3396,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-062",
+      "id": "BIND-063",
       "kind": "code",
       "node_id": "COMP-004",
       "path": "app/aeion/specstudio.py",
@@ -3368,7 +3405,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-063",
+      "id": "BIND-064",
       "kind": "code",
       "node_id": "COMP-005",
       "path": "app/aeion/docshub.py",
@@ -3377,7 +3414,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-064",
+      "id": "BIND-065",
       "kind": "code",
       "node_id": "COMP-005",
       "path": "app/aeion/docshub.py",
@@ -3386,7 +3423,7 @@
       "expected_resolution": "must_resolve"
     },
     {
-      "id": "BIND-065",
+      "id": "BIND-066",
       "kind": "code",
       "node_id": "COMP-005",
       "path": "app/aeion/docshub.py",

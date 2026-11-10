@@ -66,6 +66,7 @@ Gate results are computed from `knowledge/spec/spec.json` by `tools/axiom/axiom 
 | <a id="test-044"></a>TEST-044 | Gateway body length bounded | integration | refusal | implemented | [REQ-026](../product/requirements.md#req-026) | A relay request with Content-Length -1 or abc gets 400, one over 16 MB gets 413, and the upstream receives nothing. |
 | <a id="test-045"></a>TEST-045 | No response carries the key | integration | refusal | implemented | [REQ-003](../product/requirements.md#req-003), [REQ-020](../product/requirements.md#req-020) | With a sentinel key held by the real agent client, no page, API answer, refusal or header contains it. |
 | <a id="test-046"></a>TEST-046 | Checked patch applied | integration | normal | implemented | [REQ-021](../product/requirements.md#req-021) | A patch lowering a requirement's priority is accepted at once; spec.json holds the new value at the next revision. |
+| <a id="test-047"></a>TEST-047 | Every loopback host serves | integration | normal | implemented | [REQ-025](../product/requirements.md#req-025) | 127.0.0.1 and localhost bind IPv4 and ::1 binds IPv6 (where the machine has it), and each answers its status request. |
 
 ## Scenarios
 
@@ -76,51 +77,52 @@ Gate results are computed from `knowledge/spec/spec.json` by `tools/axiom/axiom 
 
 | Test | Result | Collected | Spec at execution | Matches current spec |
 | --- | --- | --- | --- | --- |
-| TEST-001 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-002 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-003 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-004 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-005 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-006 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-007 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-008 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-009 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-010 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-011 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-012 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-013 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-014 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-015 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-016 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-017 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-018 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-019 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-020 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-021 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-022 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-023 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-024 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-025 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-026 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-027 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-028 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-029 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-030 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-031 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-032 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-033 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-034 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-035 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-036 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-037 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-038 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-039 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-040 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-041 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-042 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-043 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-044 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-045 | pass | 1 | `c5cad4c1b4c2` | yes |
-| TEST-046 | pass | 1 | `c5cad4c1b4c2` | yes |
+| TEST-001 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-002 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-003 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-004 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-005 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-006 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-007 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-008 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-009 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-010 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-011 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-012 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-013 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-014 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-015 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-016 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-017 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-018 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-019 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-020 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-021 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-022 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-023 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-024 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-025 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-026 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-027 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-028 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-029 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-030 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-031 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-032 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-033 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-034 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-035 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-036 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-037 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-038 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-039 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-040 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-041 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-042 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-043 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-044 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-045 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-046 | pass | 1 | `8f34efcddba6` | yes |
+| TEST-047 | pass | 1 | `8f34efcddba6` | yes |
 
 Source-tree freshness is checked live by `tools/axiom/axiom evidence check`, not here.

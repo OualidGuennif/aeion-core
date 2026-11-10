@@ -267,7 +267,7 @@ security · must · risk medium · verification executable · status active · r
 
 security · must · risk critical · verification executable · status active · revision 1
 
-- Tests: [TEST-028](../verification/index.md#test-028), [TEST-041](../verification/index.md#test-041), [TEST-042](../verification/index.md#test-042)
+- Tests: [TEST-028](../verification/index.md#test-028), [TEST-041](../verification/index.md#test-041), [TEST-042](../verification/index.md#test-042), [TEST-047](../verification/index.md#test-047)
 - Components: [COMP-001](../system/components.md#comp-001)
 
 <a id="req-026"></a>

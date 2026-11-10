@@ -6,6 +6,7 @@ returns the API key or a stack trace."""
 import json
 import re
 import secrets
+import socket
 import threading
 import time
 import traceback
@@ -440,6 +441,16 @@ class Handler(BaseHTTPRequestHandler):
             return
 
 
+class _ServerV6(ThreadingHTTPServer):
+    address_family = socket.AF_INET6
+
+
+def bind(host, port, handler):
+    """The HTTP server on a loopback host: IPv6 for an IPv6 address such as ::1, IPv4 otherwise."""
+    server_class = _ServerV6 if ":" in host else ThreadingHTTPServer
+    return server_class((host.strip("[]"), port), handler)
+
+
 def serve(settings=None):
     try:
         app = App(settings)
@@ -448,7 +459,7 @@ def serve(settings=None):
     if not config.loopback(app.settings.host):
         raise SystemExit(f"aeion-core: {app.settings.host} is not a loopback address; aeion-core serves this machine only")
     Handler.app = app
-    server = ThreadingHTTPServer((app.settings.host, app.settings.port), Handler)
+    server = bind(app.settings.host, app.settings.port, Handler)
     server.daemon_threads = True
     state = "ready, Flue agents, reasoning max" if app.client.ready else f"NOT READY: {app.client.problem}"
     print(f"aeion-core {VERSION}: http://{app.settings.host}:{app.settings.port}  model {app.settings.model} ({state}); "
