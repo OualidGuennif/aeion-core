@@ -42,6 +42,8 @@ propose; the Python server validates, decides what is stored, and never lets an 
 - The OpenCode Go endpoint (`AEION_LLM_URL`, default `https://opencode.ai/inference/go/openai/v1/chat/completions`)
   and `OPENCODE_API_KEY` from the environment or one line of `.env` / `app/aeion/.env`.
 - The agent definitions, skills and tools in `app/flue/src/`, installed with `npm ci` in `app/flue`.
+  `package.json` overrides the Model Context Protocol packages the harness pins (unused here) to their
+  patched releases, so the dependency scan stays clean.
 
 ## Inputs
 

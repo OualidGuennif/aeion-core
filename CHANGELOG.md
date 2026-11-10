@@ -17,3 +17,5 @@ dates them at release time. Spec: knowledge/policies/engineering.md
   binds and answers loopback only (IPv4 or IPv6); a malformed or oversized `Content-Length` is refused on
   the server and the gateway. New tests prove the key never reaches a response and an export loads in
   aeion-observability's own catalog loader.
+- The Model Context Protocol packages the Flue harness pins are overridden to their patched releases
+  (sdk 1.32.2, client and server 2.4.0): the first dependency scan in CI flagged the pinned ones.
