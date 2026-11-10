@@ -1,0 +1,34 @@
+{
+  "format": "aeion-test-receipt/0.1",
+  "test_id": "TEST-024",
+  "level": "unit",
+  "adapter": "unittest/3.0.0",
+  "python": "3.15.2",
+  "trust": "untrusted_local",
+  "bindings": [
+    {
+      "id": "BIND-024",
+      "path": "app/tests/test_engine.py",
+      "symbol": "StoreTests.test_names_that_could_leave_the_workspace_are_refused"
+    }
+  ],
+  "bound_files": {
+    "app/tests/test_engine.py": "f9ead3292f7be85d61fd8eee0fb698d1da92b5a3812dd2ba8896b61ced8dafe2"
+  },
+  "results": {
+    "app/tests/test_engine.py::StoreTests.test_names_that_could_leave_the_workspace_are_refused": "pass"
+  },
+  "counts": {
+    "collected": 1,
+    "passed": 1,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "problems": [],
+  "status": "pass",
+  "spec_sha256": "8f34efcddba640dc4d6c83ce37b46f5c6275b5d35a13444c2003080aac1f9e73",
+  "source_tree_sha256": "a33a4918fdc4a31a92f82e780a2d742fdde88ac3cc546705facf0ead4a25da19",
+  "raw_output_sha256": "11ce978932afc0d0295b1a81d55f1c956715981c8087b11464c90dee093a20e2",
+  "executed_at": "2026-11-10T18:56:22.884196+00:00"
+}

@@ -1,0 +1,29 @@
+# Local configuration and secrets: only templates are tracked.
+env.local
+.env
+.env.*
+!.env.example
+# Generated and local state.
+.aeion/
+# Evaluation records grow with every run and stay on this machine.
+tools/evals/results.jsonl
+# .factory/ belongs to Factory's Droid; only its config is tracked, older local state stays ignored.
+.factory/*
+!.factory/settings.json
+!.factory/README.md
+# Active local recovery files; durable facts remain in knowledge/.
+work/handovers/
+/state_of_the_art research/
+CLAUDE-SECURITY-*/
+__pycache__/
+*.pyc
+.DS_Store
+node_modules/
+.venv/
+
+# aeion-core
+source/
+workspace/
+.env
+app/aeion/.env
+app/flue/node_modules/

@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# Spec: knowledge/operations/build-and-test.md
+# The factory's own test suites, in the order CI runs them; the first failure stops the run.
+# One command keeps AGENTS.md short enough for a project to add its own build lines.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+run() {
+  echo "== $*"
+  "$@"
+}
+
+run python3 tools/knowledge/tests/test_doc_links.py
+run python3 tools/knowledge/tests/test_knowledge_check.py
+run python3 tools/knowledge/tests/test_stale.py
+run python3 tools/knowledge/tests/test_orphans.py
+run python3 tools/skills/tests/test_pool.py
+run python3 tools/skills/tests/test_lint.py
+run python3 tools/skills/pool.py check
+run python3 .claude/hooks/test_hooks.py
+run python3 .claude/hooks/test_token_feedback.py
+run python3 tools/repo-health/tests/test_repo_health.py
+run python3 tools/git-hooks/tests/test_pre_push.py
+run python3 tools/release/tests/test_release.py
+run python3 tools/context/tests/test_budget.py
+run python3 -m unittest discover -s tools/axiom/tests -t tools/axiom/tests
+run python3 tools/agents/tests/test_hooks.py
+run python3 tools/agents/tests/test_prompt_defense.py
+run python3 tools/agents/tests/test_adapter_check.py
+run python3 tools/agents/tests/test_dsh_install.py
+run python3 tools/agents/tests/test_template_update.py
+run tools/agents/adapter-check --self
+run python3 tools/agents/tests/test_pi_rpc.py
+# The OpenCode, Pi and DeepSeek Harness plugins are JavaScript their own agents run; testing them needs
+# Node, which those agents install. Without Node they are reported as not run, never as passed.
+if command -v node >/dev/null 2>&1; then
+    run node --test tools/agents/tests/test_opencode.mjs
+    run node --test tools/agents/tests/test_pi.mjs
+    run node --test tools/agents/tests/test_dsh.mjs
+else
+    echo "== NOT RUN: the three JavaScript adapter suites need Node (install it with the agent that uses them)"
+    not_run=1
+fi
+run python3 tools/evals/tests/test_evals.py
+run python3 tools/loops/tests/test_loops.py
+# The factory's own demo (absent from projects): every AxiomSpec step replayed on a fresh copy.
+if [[ -x demo/check ]]; then
+    run demo/check
+fi
+if [[ ${not_run:-0} -eq 1 ]]; then
+    echo "factory-tests: PASS (Python suites); JavaScript adapter suites NOT RUN"
+else
+    echo "factory-tests: PASS"
+fi

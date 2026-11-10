@@ -1,0 +1,34 @@
+{
+  "format": "aeion-test-receipt/0.1",
+  "test_id": "TEST-006",
+  "level": "unit",
+  "adapter": "unittest/3.0.0",
+  "python": "3.15.2",
+  "trust": "untrusted_local",
+  "bindings": [
+    {
+      "id": "BIND-006",
+      "path": "app/tests/test_agents.py",
+      "symbol": "SubmitTests.test_clean_value_is_accepted_and_ends_the_turn"
+    }
+  ],
+  "bound_files": {
+    "app/tests/test_agents.py": "c6842245d07d8c6cc6e6404055a651a99e94bf88585b03187f48e3a2bea998e5"
+  },
+  "results": {
+    "app/tests/test_agents.py::SubmitTests.test_clean_value_is_accepted_and_ends_the_turn": "pass"
+  },
+  "counts": {
+    "collected": 1,
+    "passed": 1,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "problems": [],
+  "status": "pass",
+  "spec_sha256": "8f34efcddba640dc4d6c83ce37b46f5c6275b5d35a13444c2003080aac1f9e73",
+  "source_tree_sha256": "a33a4918fdc4a31a92f82e780a2d742fdde88ac3cc546705facf0ead4a25da19",
+  "raw_output_sha256": "926ac4446727cf00d8bd2f49ef9a55b37ddf93386bf68cdd8613eeceeddf7bb7",
+  "executed_at": "2026-11-10T18:56:19.566192+00:00"
+}
