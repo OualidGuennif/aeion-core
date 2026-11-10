@@ -1,0 +1,10 @@
+#!/usr/bin/env python3
+# Spec: knowledge/components/aeion-engine.md
+"""Start aeion-core on http://127.0.0.1:8765 (AEION_PORT, AEION_HOST, AEION_DATA, AEION_LLM=mock to work offline)."""
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from aeion.server import serve  # noqa: E402
+
+serve()

@@ -1,0 +1,34 @@
+{
+  "format": "aeion-test-receipt/0.1",
+  "test_id": "TEST-021",
+  "level": "integration",
+  "adapter": "unittest/3.0.0",
+  "python": "3.15.2",
+  "trust": "untrusted_local",
+  "bindings": [
+    {
+      "id": "BIND-021",
+      "path": "app/tests/test_engine.py",
+      "symbol": "ServerTests.test_a_foreign_host_is_refused"
+    }
+  ],
+  "bound_files": {
+    "app/tests/test_engine.py": "d46cc78a12ed30810b57f4ef5231f745fbce2ab78b46eb6b099ebfc9a0be7558"
+  },
+  "results": {
+    "app/tests/test_engine.py::ServerTests.test_a_foreign_host_is_refused": "pass"
+  },
+  "counts": {
+    "collected": 1,
+    "passed": 1,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "problems": [],
+  "status": "pass",
+  "spec_sha256": "18fa82886b67ff7b7f9ad273cbb40f012a139eb6d9a1d7ee2bfc6e23e91e64eb",
+  "source_tree_sha256": "956bb4b9cbe7fb5e0e154e9c365ddc76ff88a79625e4d9a6382090a478d14368",
+  "raw_output_sha256": "5eb900a47a087372f05d73efe43f8f2a81a794e6a17e548e5e388b61e9192fff",
+  "executed_at": "2026-11-10T15:21:29.592973+00:00"
+}

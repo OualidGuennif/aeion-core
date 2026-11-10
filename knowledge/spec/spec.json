@@ -1,0 +1,2660 @@
+{
+  "format": "axiomspec/0.1",
+  "profile": "AX-CORE-0.1",
+  "project": {
+    "id": "PROJECT-001",
+    "name": "Æion Core",
+    "owner": "ACTOR-001",
+    "mode": "product",
+    "description": "A local web application that takes a feature from brainstorm to an AxiomSpec specification and the feature file aeion-observability builds, with cited documentation."
+  },
+  "actors": [
+    {
+      "id": "ACTOR-001",
+      "name": "Product owner",
+      "type": "human_role",
+      "binding_status": "asserted"
+    },
+    {
+      "id": "ACTOR-002",
+      "name": "Coding agent",
+      "type": "ai",
+      "binding_status": "asserted"
+    }
+  ],
+  "sources": [
+    {
+      "id": "SRC-001",
+      "type": "user_input",
+      "locator": "owner request, 2026-11-09/10: aeion-core webapp (brainstorm, spec studio, docs) on Flue agents",
+      "capture_sha256": null,
+      "review_state": "reviewed"
+    }
+  ],
+  "environments": [],
+  "nodes": [
+    {
+      "id": "GOAL-001",
+      "kind": "Goal",
+      "revision": 1,
+      "status": "active",
+      "title": "Brainstorm a feature until it survives review",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "description": "The Elephant questions the owner's idea until a hypothesis is anchored; seven fresh Goldfish review it and a brief is saved.",
+        "success_measure": "A brainstorm ends with a saved brief whose analysis names every reviewer, completed or not run."
+      }
+    },
+    {
+      "id": "GOAL-002",
+      "kind": "Goal",
+      "revision": 1,
+      "status": "active",
+      "title": "Specify a feature the build factory can implement",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "description": "A feature document becomes AxiomSpec obligations that pass the template's gates, then an export aeion-observability accepts.",
+        "success_measure": "Every exported feature file loads in the build factory's catalog with its contract current."
+      }
+    },
+    {
+      "id": "GOAL-003",
+      "kind": "Goal",
+      "revision": 1,
+      "status": "active",
+      "title": "Answer documentation questions with checkable citations",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "description": "Every document is findable, and the assistant answers only from evidence its tools returned.",
+        "success_measure": "Every citation in an answer links to a page section or graph node returned in that run."
+      }
+    },
+    {
+      "id": "GOAL-004",
+      "kind": "Goal",
+      "revision": 1,
+      "status": "active",
+      "title": "Run model work as checked agents",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "description": "Each model task is a dedicated Flue agent whose results are validated by code; the key stays in the server.",
+        "success_measure": "No stored value comes from an agent without passing its schema and checks."
+      }
+    },
+    {
+      "id": "GOAL-005",
+      "kind": "Goal",
+      "revision": 1,
+      "status": "active",
+      "title": "Keep the local application safe",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "description": "The server answers only this machine, refuses cross-site writes and never returns secrets or unsafe markup.",
+        "success_measure": "Every security test of the engine passes."
+      }
+    },
+    {
+      "id": "REQ-001",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Send each input once",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "functional",
+        "priority": "must",
+        "risk": "high",
+        "verification_mode": "executable",
+        "pattern": "ubiquitous",
+        "conditions": [],
+        "trigger": null,
+        "feature": null,
+        "subject": "agent launcher",
+        "response": "send the turn's message only through --message and the supporting material only through the input file"
+      }
+    },
+    {
+      "id": "REQ-002",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Reason at the maximum",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "functional",
+        "priority": "must",
+        "risk": "medium",
+        "verification_mode": "executable",
+        "pattern": "ubiquitous",
+        "conditions": [],
+        "trigger": null,
+        "feature": null,
+        "subject": "agent launcher",
+        "response": "request reasoning effort max with thinking enabled on every model call"
+      }
+    },
+    {
+      "id": "REQ-003",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Keep the key in the server",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "security",
+        "priority": "must",
+        "risk": "critical",
+        "verification_mode": "executable",
+        "pattern": "unwanted",
+        "conditions": [],
+        "trigger": "a request carries an unknown run token or names another model",
+        "feature": null,
+        "subject": "gateway",
+        "response": "refuse the request without contacting the upstream"
+      }
+    },
+    {
+      "id": "REQ-004",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Accept only valid submissions",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "data",
+        "priority": "must",
+        "risk": "high",
+        "verification_mode": "executable",
+        "pattern": "unwanted",
+        "conditions": [],
+        "trigger": "a submission does not match its schema",
+        "feature": null,
+        "subject": "agent gateway",
+        "response": "refuse it with the failing fields and record nothing"
+      }
+    },
+    {
+      "id": "REQ-005",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Return failing checks to the agent",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "functional",
+        "priority": "must",
+        "risk": "medium",
+        "verification_mode": "executable",
+        "pattern": "event",
+        "conditions": [],
+        "trigger": "a schema-valid submission fails a deterministic check",
+        "feature": null,
+        "subject": "agent gateway",
+        "response": "record the value and return the failing checks until the attempts run out"
+      }
+    },
+    {
+      "id": "REQ-006",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Anchor the hypothesis through a tool",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "functional",
+        "priority": "must",
+        "risk": "medium",
+        "verification_mode": "executable",
+        "pattern": "event",
+        "conditions": [],
+        "trigger": "the Elephant anchors a hypothesis",
+        "feature": null,
+        "subject": "brainstorm",
+        "response": "store the hypothesis the Elephant passed to its tool and open the readiness gate"
+      }
+    },
+    {
+      "id": "REQ-007",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Review with fresh Goldfish",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "functional",
+        "priority": "must",
+        "risk": "medium",
+        "verification_mode": "executable",
+        "pattern": "event",
+        "conditions": [],
+        "trigger": "the owner opens the Goldfish review",
+        "feature": null,
+        "subject": "brainstorm",
+        "response": "run seven reviewers that receive the hypothesis and never the conversation"
+      }
+    },
+    {
+      "id": "REQ-008",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Report a failed reviewer as not run",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "functional",
+        "priority": "must",
+        "risk": "medium",
+        "verification_mode": "executable",
+        "pattern": "unwanted",
+        "conditions": [],
+        "trigger": "a reviewer fails twice",
+        "feature": null,
+        "subject": "Goldfish review",
+        "response": "report the reviewer as not run, never as having no findings"
+      }
+    },
+    {
+      "id": "REQ-009",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Apply an edit only where it fits once",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "functional",
+        "priority": "must",
+        "risk": "medium",
+        "verification_mode": "executable",
+        "pattern": "unwanted",
+        "conditions": [],
+        "trigger": "a proposed edit's text does not occur exactly once in the document",
+        "feature": null,
+        "subject": "design review",
+        "response": "refuse the edit and tell the resolver"
+      }
+    },
+    {
+      "id": "REQ-010",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Normalize requirement sentences",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "functional",
+        "priority": "must",
+        "risk": "medium",
+        "verification_mode": "executable",
+        "pattern": "event",
+        "conditions": [],
+        "trigger": "the analyst submits a fragment",
+        "feature": null,
+        "subject": "spec studio",
+        "response": "store the requirement with lowercase clauses and no final period"
+      }
+    },
+    {
+      "id": "REQ-011",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Leave decisions to the owner",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "functional",
+        "priority": "must",
+        "risk": "high",
+        "verification_mode": "executable",
+        "pattern": "unwanted",
+        "conditions": [],
+        "trigger": "an agent submission or patch sets a decision's answer",
+        "feature": null,
+        "subject": "spec studio",
+        "response": "keep the decision unanswered"
+      }
+    },
+    {
+      "id": "REQ-012",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Refuse approval while questions are open",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "functional",
+        "priority": "must",
+        "risk": "high",
+        "verification_mode": "executable",
+        "pattern": "unwanted",
+        "conditions": [],
+        "trigger": "a blocking decision or assumption is still open",
+        "feature": null,
+        "subject": "spec studio",
+        "response": "refuse the approval and keep the feature in the interview"
+      }
+    },
+    {
+      "id": "REQ-013",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Export what the build factory accepts",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "data",
+        "priority": "must",
+        "risk": "high",
+        "verification_mode": "executable",
+        "pattern": "event",
+        "conditions": [],
+        "trigger": "the owner approves a ready feature",
+        "feature": null,
+        "subject": "spec studio",
+        "response": "write an eight-section file of at most 12,000 bytes with acceptance checks and its manifest row"
+      }
+    },
+    {
+      "id": "REQ-014",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Follow the build factory's scope rules",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "security",
+        "priority": "must",
+        "risk": "high",
+        "verification_mode": "executable",
+        "pattern": "unwanted",
+        "conditions": [],
+        "trigger": "a write path is not literal, hidden, parental or outside the product roots",
+        "feature": null,
+        "subject": "spec studio",
+        "response": "report a write-paths issue and block the export"
+      }
+    },
+    {
+      "id": "REQ-015",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Cite only returned evidence",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "functional",
+        "priority": "must",
+        "risk": "high",
+        "verification_mode": "executable",
+        "pattern": "unwanted",
+        "conditions": [],
+        "trigger": "an answer cites a number no tool returned in that run",
+        "feature": null,
+        "subject": "docs assistant",
+        "response": "drop the citation from the sources"
+      }
+    },
+    {
+      "id": "REQ-016",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Open long pages by section",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "functional",
+        "priority": "must",
+        "risk": "medium",
+        "verification_mode": "executable",
+        "pattern": "event",
+        "conditions": [],
+        "trigger": "the librarian opens a page section",
+        "feature": null,
+        "subject": "docs assistant",
+        "response": "return the section down to the next heading of the same level"
+      }
+    },
+    {
+      "id": "REQ-017",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Refuse foreign hosts and cross-site writes",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "security",
+        "priority": "must",
+        "risk": "critical",
+        "verification_mode": "executable",
+        "pattern": "unwanted",
+        "conditions": [],
+        "trigger": "a request names another host, or a write lacks the custom header or a JSON body",
+        "feature": null,
+        "subject": "web server",
+        "response": "refuse the request with status 403"
+      }
+    },
+    {
+      "id": "REQ-018",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Keep names inside the workspace",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "security",
+        "priority": "must",
+        "risk": "high",
+        "verification_mode": "executable",
+        "pattern": "unwanted",
+        "conditions": [],
+        "trigger": "a session or feature name is not a plain lowercase name",
+        "feature": null,
+        "subject": "store",
+        "response": "refuse the name before it becomes a path"
+      }
+    },
+    {
+      "id": "REQ-019",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Render model text safely",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "security",
+        "priority": "must",
+        "risk": "high",
+        "verification_mode": "executable",
+        "pattern": "ubiquitous",
+        "conditions": [],
+        "trigger": null,
+        "feature": null,
+        "subject": "Markdown renderer",
+        "response": "escape HTML and drop unsafe links, checking a link before rewriting it"
+      }
+    },
+    {
+      "id": "REQ-020",
+      "kind": "Requirement",
+      "revision": 1,
+      "status": "active",
+      "title": "Report readiness without secrets",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "category": "security",
+        "priority": "must",
+        "risk": "medium",
+        "verification_mode": "executable",
+        "pattern": "ubiquitous",
+        "conditions": [],
+        "trigger": null,
+        "feature": null,
+        "subject": "web server",
+        "response": "report the model, reasoning level and readiness without any key or stack trace"
+      }
+    },
+    {
+      "id": "TEST-001",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "One flue run sends each input once",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "A real flue run's request holds the report marker and the message exactly once, effort max, thinking enabled.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": false,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-002",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Relay adds the key and meters usage",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "The upstream receives the key, the session header and the user agent; the run records the usage.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": false,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-003",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Unknown token or model is refused",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "An unknown token gets 401 and another model 400; the upstream receives nothing.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-004",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Key absent from refusals",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "An upstream 403 reaches the caller without the key in its body.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-005",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Schema refusal records nothing",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "A value with an overlong item is refused, naming the path, and no submission is recorded.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-006",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Clean value accepted",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "A schema-valid value without problems is accepted and ends the turn.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": false,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-007",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Failing checks returned until exhausted",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "Failing checks are returned without ending the turn until the last attempt, which records the value.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-008",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Hypothesis anchored by the tool",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "The idea is the first message, no block repeats the new message, and the tool's hypothesis is stored.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": false,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-009",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Seven fresh Goldfish",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "Seven goldfish runs each receive the hypothesis as their last block and no conversation.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": false,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-010",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Twice-failed reviewer not run",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "Two failures give status not run with an empty report.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-011",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Edit must occur once",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "A resolution whose find text is absent is refused with its count; the corrected one applies.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-012",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Clauses normalized, decision open",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "The stored trigger, subject and response are lowercase without a final period, and the decision has no answer.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": false,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-013",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Patch cannot answer a decision",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "A patch that relinks a test and sets a decision answer changes the links only.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-014",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Approval refused while a decision is open",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "Approving with a blocking decision open raises a refusal and writes no export.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-015",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Answer then approve exports",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "After the owner answers, the feature is ready and approval writes 101-*.md under 12,000 bytes with checks and frontmatter.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": false,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-016",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Gate failures named by key",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "A fragment with a pattern error gets PATTERN_FIELDS on r1 back; the corrected one is accepted.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-017",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Scope rules on write paths",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "Hidden, doubled-slash, foreign and parent paths each produce a WRITE_PATHS issue.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-018",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Amendment checked as a whole",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "An amendment before a submission is refused; after one, it replaces the item by key and is accepted.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": false,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-019",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Only returned evidence is cited",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "An answer citing [1] and [7] after one search keeps source 1 only.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-020",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Section stops at its level",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "A level-2 section includes its level-3 child and stops before the next level-2 heading.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": false,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-021",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Foreign host refused",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "A request with another Host header gets 403.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-022",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Write without header refused",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "A JSON write without X-Aeion and a form write with it both get 403.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-023",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Strict page policy",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "The page carries script-src 'self' and frame denial.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": false,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-024",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Unsafe names refused",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "Traversal, uppercase, empty, overlong and NUL names raise a refusal.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-025",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Saved feature reads back",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "A saved feature reads back with its title and byte count.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": false,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-026",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "HTML escaped, unsafe links dropped",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "Script tags are escaped and javascript links removed.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-027",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Link checked before rewriting",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "A javascript link is dropped even when a rewriter would make it safe.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-028",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Status without secrets",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "Status reports ready and max reasoning, with no key line.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": false,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-029",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Unknown session not found",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "An unknown session is 404 without a traceback.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-030",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Review needs a hypothesis",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "Opening a review before a hypothesis raises a refusal.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-031",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Undeclared tool refused",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "Calling a tool the run did not declare is refused.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-032",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Bridge runs registered tools",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "integration",
+        "oracle": "A registered tool returns its output through the bridge; a missing one is reported unavailable.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": false,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-033",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Goldfish input numbered once",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "A review input numbers only the range and carries the standard in one block.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": false,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-035",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Repeated payload refused",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "A block equal to the message, or a non-conversation block containing a long message, is refused before any run.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": true,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "TEST-034",
+      "kind": "TestCase",
+      "revision": 1,
+      "status": "active",
+      "title": "Owner question instead of a section",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "level": "unit",
+        "oracle": "An ask_owner call turns the section into a question that cannot be approved.",
+        "state": "implemented",
+        "runner": "unittest",
+        "negative": false,
+        "witness_scenario_ids": []
+      }
+    },
+    {
+      "id": "COMP-001",
+      "kind": "Component",
+      "revision": 1,
+      "status": "active",
+      "title": "Engine",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "responsibility": "Serves the page and the JSON API, stores sessions and features, renders Markdown safely.",
+        "boundary": "app/aeion server, store, config and markdown; loopback only"
+      }
+    },
+    {
+      "id": "COMP-002",
+      "kind": "Component",
+      "revision": 1,
+      "status": "active",
+      "title": "Flue agents",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "responsibility": "Launches one Flue agent per task, relays its model calls with the key and validates its submissions.",
+        "boundary": "app/aeion/agents.py and app/flue; the key never leaves the server process"
+      }
+    },
+    {
+      "id": "COMP-003",
+      "kind": "Component",
+      "revision": 1,
+      "status": "active",
+      "title": "Brainstorm and design",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "responsibility": "Runs the Elephant conversation, the Goldfish reviews, drafting and resolution.",
+        "boundary": "app/aeion brainstorm, design and goldfish"
+      }
+    },
+    {
+      "id": "COMP-004",
+      "kind": "Component",
+      "revision": 1,
+      "status": "active",
+      "title": "Spec studio",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "responsibility": "Merges checked fragments into the product spec, runs the interview and exports approved features.",
+        "boundary": "app/aeion/specstudio.py; reads aeion-observability, never writes it"
+      }
+    },
+    {
+      "id": "COMP-005",
+      "kind": "Component",
+      "revision": 1,
+      "status": "active",
+      "title": "Docs hub",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "responsibility": "Indexes every document, serves pages with diagrams and runs the librarian's tools.",
+        "boundary": "app/aeion/docshub.py; configured roots only"
+      }
+    },
+    {
+      "id": "TERM-001",
+      "kind": "Term",
+      "revision": 1,
+      "status": "active",
+      "title": "Agent run",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "definition": "One flue run of one role agent: one message, one input file, a disposable conversation.",
+        "aliases": [],
+        "unit": null,
+        "context": "aeion-core"
+      }
+    },
+    {
+      "id": "TERM-002",
+      "kind": "Term",
+      "revision": 1,
+      "status": "active",
+      "title": "Submission",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "definition": "A typed result an agent passes to a submit tool; stored only after its schema and checks.",
+        "aliases": [],
+        "unit": null,
+        "context": "aeion-core"
+      }
+    },
+    {
+      "id": "DEC-001",
+      "kind": "Decision",
+      "revision": 1,
+      "status": "active",
+      "title": "Agent harness",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "question": "Which harness runs the model work?",
+        "options": [
+          "Flue agents with dedicated tools and skills",
+          "Direct chat completions from Python"
+        ],
+        "answer": "Flue agents with dedicated tools and skills (owner, 2026-11-10)",
+        "blocking": true,
+        "rationale": "The owner asked for Flue, with deepseek-v4.1-flash at maximum reasoning."
+      }
+    },
+    {
+      "id": "ASM-001",
+      "kind": "Assumption",
+      "revision": 1,
+      "status": "active",
+      "title": "Node is available",
+      "owner": "ACTOR-001",
+      "created_by": "ACTOR-002",
+      "source_ids": [
+        "SRC-001"
+      ],
+      "data": {
+        "claim": "The owner's machine has Node.js 22.19 or newer for the Flue harness.",
+        "validation_method": "app/serve reports the agents as ready.",
+        "state": "validated",
+        "blocking": false
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "EDGE-001",
+      "from": "REQ-001",
+      "relation": "satisfies",
+      "to": "GOAL-004",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-002",
+      "from": "REQ-002",
+      "relation": "satisfies",
+      "to": "GOAL-004",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-003",
+      "from": "REQ-003",
+      "relation": "satisfies",
+      "to": "GOAL-004",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-004",
+      "from": "REQ-004",
+      "relation": "satisfies",
+      "to": "GOAL-004",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-005",
+      "from": "REQ-005",
+      "relation": "satisfies",
+      "to": "GOAL-004",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-006",
+      "from": "REQ-006",
+      "relation": "satisfies",
+      "to": "GOAL-001",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-007",
+      "from": "REQ-007",
+      "relation": "satisfies",
+      "to": "GOAL-001",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-008",
+      "from": "REQ-008",
+      "relation": "satisfies",
+      "to": "GOAL-001",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-009",
+      "from": "REQ-009",
+      "relation": "satisfies",
+      "to": "GOAL-001",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-010",
+      "from": "REQ-010",
+      "relation": "satisfies",
+      "to": "GOAL-002",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-011",
+      "from": "REQ-011",
+      "relation": "satisfies",
+      "to": "GOAL-002",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-012",
+      "from": "REQ-012",
+      "relation": "satisfies",
+      "to": "GOAL-002",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-013",
+      "from": "REQ-013",
+      "relation": "satisfies",
+      "to": "GOAL-002",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-014",
+      "from": "REQ-014",
+      "relation": "satisfies",
+      "to": "GOAL-002",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-015",
+      "from": "REQ-015",
+      "relation": "satisfies",
+      "to": "GOAL-003",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-016",
+      "from": "REQ-016",
+      "relation": "satisfies",
+      "to": "GOAL-003",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-017",
+      "from": "REQ-017",
+      "relation": "satisfies",
+      "to": "GOAL-005",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-018",
+      "from": "REQ-018",
+      "relation": "satisfies",
+      "to": "GOAL-005",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-019",
+      "from": "REQ-019",
+      "relation": "satisfies",
+      "to": "GOAL-005",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-020",
+      "from": "REQ-020",
+      "relation": "satisfies",
+      "to": "GOAL-005",
+      "origin": "declared",
+      "rationale": "The requirement is one way the goal is met."
+    },
+    {
+      "id": "EDGE-021",
+      "from": "TEST-001",
+      "relation": "verifies",
+      "to": "REQ-001",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-022",
+      "from": "TEST-001",
+      "relation": "verifies",
+      "to": "REQ-002",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-023",
+      "from": "TEST-001",
+      "relation": "verifies",
+      "to": "REQ-004",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-024",
+      "from": "TEST-002",
+      "relation": "verifies",
+      "to": "REQ-003",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-025",
+      "from": "TEST-003",
+      "relation": "verifies",
+      "to": "REQ-003",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-026",
+      "from": "TEST-004",
+      "relation": "verifies",
+      "to": "REQ-003",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-027",
+      "from": "TEST-005",
+      "relation": "verifies",
+      "to": "REQ-004",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-028",
+      "from": "TEST-006",
+      "relation": "verifies",
+      "to": "REQ-004",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-029",
+      "from": "TEST-006",
+      "relation": "verifies",
+      "to": "REQ-005",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-030",
+      "from": "TEST-007",
+      "relation": "verifies",
+      "to": "REQ-005",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-031",
+      "from": "TEST-008",
+      "relation": "verifies",
+      "to": "REQ-001",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-032",
+      "from": "TEST-008",
+      "relation": "verifies",
+      "to": "REQ-006",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-033",
+      "from": "TEST-009",
+      "relation": "verifies",
+      "to": "REQ-007",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-034",
+      "from": "TEST-010",
+      "relation": "verifies",
+      "to": "REQ-008",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-035",
+      "from": "TEST-011",
+      "relation": "verifies",
+      "to": "REQ-009",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-036",
+      "from": "TEST-012",
+      "relation": "verifies",
+      "to": "REQ-010",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-037",
+      "from": "TEST-012",
+      "relation": "verifies",
+      "to": "REQ-011",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-038",
+      "from": "TEST-013",
+      "relation": "verifies",
+      "to": "REQ-011",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-039",
+      "from": "TEST-014",
+      "relation": "verifies",
+      "to": "REQ-012",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-040",
+      "from": "TEST-015",
+      "relation": "verifies",
+      "to": "REQ-012",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-041",
+      "from": "TEST-015",
+      "relation": "verifies",
+      "to": "REQ-013",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-042",
+      "from": "TEST-016",
+      "relation": "verifies",
+      "to": "REQ-005",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-043",
+      "from": "TEST-016",
+      "relation": "verifies",
+      "to": "REQ-013",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-044",
+      "from": "TEST-017",
+      "relation": "verifies",
+      "to": "REQ-014",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-045",
+      "from": "TEST-018",
+      "relation": "verifies",
+      "to": "REQ-005",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-046",
+      "from": "TEST-018",
+      "relation": "verifies",
+      "to": "REQ-014",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-047",
+      "from": "TEST-019",
+      "relation": "verifies",
+      "to": "REQ-015",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-048",
+      "from": "TEST-020",
+      "relation": "verifies",
+      "to": "REQ-016",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-049",
+      "from": "TEST-020",
+      "relation": "verifies",
+      "to": "REQ-015",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-050",
+      "from": "TEST-021",
+      "relation": "verifies",
+      "to": "REQ-017",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-051",
+      "from": "TEST-022",
+      "relation": "verifies",
+      "to": "REQ-017",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-052",
+      "from": "TEST-023",
+      "relation": "verifies",
+      "to": "REQ-017",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-053",
+      "from": "TEST-023",
+      "relation": "verifies",
+      "to": "REQ-019",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-054",
+      "from": "TEST-024",
+      "relation": "verifies",
+      "to": "REQ-018",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-055",
+      "from": "TEST-025",
+      "relation": "verifies",
+      "to": "REQ-018",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-056",
+      "from": "TEST-026",
+      "relation": "verifies",
+      "to": "REQ-019",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-057",
+      "from": "TEST-027",
+      "relation": "verifies",
+      "to": "REQ-019",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-058",
+      "from": "TEST-028",
+      "relation": "verifies",
+      "to": "REQ-020",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-059",
+      "from": "TEST-029",
+      "relation": "verifies",
+      "to": "REQ-020",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-060",
+      "from": "TEST-029",
+      "relation": "verifies",
+      "to": "REQ-018",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-061",
+      "from": "TEST-030",
+      "relation": "verifies",
+      "to": "REQ-007",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-062",
+      "from": "TEST-031",
+      "relation": "verifies",
+      "to": "REQ-004",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-063",
+      "from": "TEST-032",
+      "relation": "verifies",
+      "to": "REQ-005",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-064",
+      "from": "TEST-033",
+      "relation": "verifies",
+      "to": "REQ-007",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-065",
+      "from": "TEST-033",
+      "relation": "verifies",
+      "to": "REQ-001",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-066",
+      "from": "TEST-035",
+      "relation": "verifies",
+      "to": "REQ-001",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-067",
+      "from": "TEST-034",
+      "relation": "verifies",
+      "to": "REQ-009",
+      "origin": "declared",
+      "rationale": "The test observes this obligation."
+    },
+    {
+      "id": "EDGE-068",
+      "from": "COMP-001",
+      "relation": "implements",
+      "to": "REQ-017",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-069",
+      "from": "COMP-001",
+      "relation": "implements",
+      "to": "REQ-018",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-070",
+      "from": "COMP-001",
+      "relation": "implements",
+      "to": "REQ-019",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-071",
+      "from": "COMP-001",
+      "relation": "implements",
+      "to": "REQ-020",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-072",
+      "from": "COMP-002",
+      "relation": "implements",
+      "to": "REQ-001",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-073",
+      "from": "COMP-002",
+      "relation": "implements",
+      "to": "REQ-002",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-074",
+      "from": "COMP-002",
+      "relation": "implements",
+      "to": "REQ-003",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-075",
+      "from": "COMP-002",
+      "relation": "implements",
+      "to": "REQ-004",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-076",
+      "from": "COMP-002",
+      "relation": "implements",
+      "to": "REQ-005",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-077",
+      "from": "COMP-003",
+      "relation": "implements",
+      "to": "REQ-006",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-078",
+      "from": "COMP-003",
+      "relation": "implements",
+      "to": "REQ-007",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-079",
+      "from": "COMP-003",
+      "relation": "implements",
+      "to": "REQ-008",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-080",
+      "from": "COMP-003",
+      "relation": "implements",
+      "to": "REQ-009",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-081",
+      "from": "COMP-004",
+      "relation": "implements",
+      "to": "REQ-010",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-082",
+      "from": "COMP-004",
+      "relation": "implements",
+      "to": "REQ-011",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-083",
+      "from": "COMP-004",
+      "relation": "implements",
+      "to": "REQ-012",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-084",
+      "from": "COMP-004",
+      "relation": "implements",
+      "to": "REQ-013",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-085",
+      "from": "COMP-004",
+      "relation": "implements",
+      "to": "REQ-014",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-086",
+      "from": "COMP-005",
+      "relation": "implements",
+      "to": "REQ-015",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-087",
+      "from": "COMP-005",
+      "relation": "implements",
+      "to": "REQ-016",
+      "origin": "declared",
+      "rationale": "The component is where this obligation is realized."
+    },
+    {
+      "id": "EDGE-088",
+      "from": "REQ-001",
+      "relation": "uses_term",
+      "to": "TERM-001",
+      "origin": "declared",
+      "rationale": "The wording relies on this defined term."
+    },
+    {
+      "id": "EDGE-089",
+      "from": "REQ-002",
+      "relation": "uses_term",
+      "to": "TERM-001",
+      "origin": "declared",
+      "rationale": "The wording relies on this defined term."
+    },
+    {
+      "id": "EDGE-090",
+      "from": "REQ-004",
+      "relation": "uses_term",
+      "to": "TERM-002",
+      "origin": "declared",
+      "rationale": "The wording relies on this defined term."
+    },
+    {
+      "id": "EDGE-091",
+      "from": "REQ-005",
+      "relation": "uses_term",
+      "to": "TERM-002",
+      "origin": "declared",
+      "rationale": "The wording relies on this defined term."
+    },
+    {
+      "id": "EDGE-092",
+      "from": "DEC-001",
+      "relation": "governs",
+      "to": "REQ-001",
+      "origin": "declared",
+      "rationale": "The decision fixes how this is met."
+    },
+    {
+      "id": "EDGE-093",
+      "from": "DEC-001",
+      "relation": "governs",
+      "to": "REQ-002",
+      "origin": "declared",
+      "rationale": "The decision fixes how this is met."
+    },
+    {
+      "id": "EDGE-094",
+      "from": "REQ-001",
+      "relation": "assumes",
+      "to": "ASM-001",
+      "origin": "declared",
+      "rationale": "The obligation holds only under this assumption."
+    }
+  ],
+  "bindings": [
+    {
+      "id": "BIND-001",
+      "kind": "test",
+      "node_id": "TEST-001",
+      "path": "app/tests/test_agents.py",
+      "symbol": "FlueRunTests.test_each_input_reaches_the_model_once_and_the_submission_is_validated",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-002",
+      "kind": "test",
+      "node_id": "TEST-002",
+      "path": "app/tests/test_agents.py",
+      "symbol": "GatewayTests.test_relay_adds_the_key_and_provider_headers_and_meters_usage",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-003",
+      "kind": "test",
+      "node_id": "TEST-003",
+      "path": "app/tests/test_agents.py",
+      "symbol": "GatewayTests.test_unknown_token_and_other_model_are_refused_before_the_upstream",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-004",
+      "kind": "test",
+      "node_id": "TEST-004",
+      "path": "app/tests/test_agents.py",
+      "symbol": "GatewayTests.test_the_key_never_appears_in_a_refusal",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-005",
+      "kind": "test",
+      "node_id": "TEST-005",
+      "path": "app/tests/test_agents.py",
+      "symbol": "SubmitTests.test_schema_refusal_names_the_field_and_records_nothing",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-006",
+      "kind": "test",
+      "node_id": "TEST-006",
+      "path": "app/tests/test_agents.py",
+      "symbol": "SubmitTests.test_clean_value_is_accepted_and_ends_the_turn",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-007",
+      "kind": "test",
+      "node_id": "TEST-007",
+      "path": "app/tests/test_agents.py",
+      "symbol": "SubmitTests.test_failing_checks_are_returned_until_the_attempts_run_out",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-008",
+      "kind": "test",
+      "node_id": "TEST-008",
+      "path": "app/tests/test_sections.py",
+      "symbol": "BrainstormTests.test_first_turn_sends_the_idea_once_and_the_tool_anchors_the_hypothesis",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-009",
+      "kind": "test",
+      "node_id": "TEST-009",
+      "path": "app/tests/test_sections.py",
+      "symbol": "BrainstormTests.test_review_runs_seven_fresh_goldfish_then_the_brief",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-010",
+      "kind": "test",
+      "node_id": "TEST-010",
+      "path": "app/tests/test_sections.py",
+      "symbol": "GoldfishTests.test_a_reviewer_that_fails_twice_is_not_run",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-011",
+      "kind": "test",
+      "node_id": "TEST-011",
+      "path": "app/tests/test_sections.py",
+      "symbol": "DesignTests.test_resolution_refuses_an_edit_that_does_not_apply_once",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-012",
+      "kind": "test",
+      "node_id": "TEST-012",
+      "path": "app/tests/test_sections.py",
+      "symbol": "StudioTests.test_draft_merges_normalized_requirements_and_leaves_decisions_to_the_owner",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-013",
+      "kind": "test",
+      "node_id": "TEST-013",
+      "path": "app/tests/test_sections.py",
+      "symbol": "StudioTests.test_patch_may_relink_a_test_but_never_answer_a_decision",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-014",
+      "kind": "test",
+      "node_id": "TEST-014",
+      "path": "app/tests/test_sections.py",
+      "symbol": "StudioTests.test_approval_is_refused_while_a_blocking_decision_is_open",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-015",
+      "kind": "test",
+      "node_id": "TEST-015",
+      "path": "app/tests/test_sections.py",
+      "symbol": "StudioTests.test_answers_then_approval_write_an_export_the_build_factory_accepts",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-016",
+      "kind": "test",
+      "node_id": "TEST-016",
+      "path": "app/tests/test_sections.py",
+      "symbol": "StudioTests.test_failed_gates_go_back_to_the_analyst_by_local_key",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-017",
+      "kind": "test",
+      "node_id": "TEST-017",
+      "path": "app/tests/test_sections.py",
+      "symbol": "StudioTests.test_write_paths_follow_the_build_factory_scope_rules",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-018",
+      "kind": "test",
+      "node_id": "TEST-018",
+      "path": "app/tests/test_sections.py",
+      "symbol": "StudioTests.test_an_amendment_fixes_one_item_and_is_checked_as_a_whole",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-019",
+      "kind": "test",
+      "node_id": "TEST-019",
+      "path": "app/tests/test_sections.py",
+      "symbol": "DocsTests.test_the_answer_cites_only_numbered_evidence",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-020",
+      "kind": "test",
+      "node_id": "TEST-020",
+      "path": "app/tests/test_sections.py",
+      "symbol": "DocsTests.test_section_text_stops_at_the_next_heading_of_the_same_level",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-021",
+      "kind": "test",
+      "node_id": "TEST-021",
+      "path": "app/tests/test_engine.py",
+      "symbol": "ServerTests.test_a_foreign_host_is_refused",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-022",
+      "kind": "test",
+      "node_id": "TEST-022",
+      "path": "app/tests/test_engine.py",
+      "symbol": "ServerTests.test_a_write_without_the_custom_header_is_refused",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-023",
+      "kind": "test",
+      "node_id": "TEST-023",
+      "path": "app/tests/test_engine.py",
+      "symbol": "ServerTests.test_the_page_carries_a_strict_content_security_policy",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-024",
+      "kind": "test",
+      "node_id": "TEST-024",
+      "path": "app/tests/test_engine.py",
+      "symbol": "StoreTests.test_names_that_could_leave_the_workspace_are_refused",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-025",
+      "kind": "test",
+      "node_id": "TEST-025",
+      "path": "app/tests/test_engine.py",
+      "symbol": "StoreTests.test_a_saved_feature_reads_back_with_its_metadata",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-026",
+      "kind": "test",
+      "node_id": "TEST-026",
+      "path": "app/tests/test_engine.py",
+      "symbol": "MarkdownTests.test_html_is_escaped_and_unsafe_links_are_dropped",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-027",
+      "kind": "test",
+      "node_id": "TEST-027",
+      "path": "app/tests/test_engine.py",
+      "symbol": "MarkdownTests.test_a_rewritten_link_is_checked_before_rewriting",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-028",
+      "kind": "test",
+      "node_id": "TEST-028",
+      "path": "app/tests/test_engine.py",
+      "symbol": "ServerTests.test_status_reports_readiness_without_secrets",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-029",
+      "kind": "test",
+      "node_id": "TEST-029",
+      "path": "app/tests/test_engine.py",
+      "symbol": "ServerTests.test_an_unknown_session_is_not_found",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-030",
+      "kind": "test",
+      "node_id": "TEST-030",
+      "path": "app/tests/test_sections.py",
+      "symbol": "BrainstormTests.test_review_needs_a_hypothesis",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-031",
+      "kind": "test",
+      "node_id": "TEST-031",
+      "path": "app/tests/test_agents.py",
+      "symbol": "SubmitTests.test_an_undeclared_tool_is_refused",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-032",
+      "kind": "test",
+      "node_id": "TEST-032",
+      "path": "app/tests/test_agents.py",
+      "symbol": "GatewayTests.test_bridge_runs_a_registered_tool_and_reports_refusals",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-033",
+      "kind": "test",
+      "node_id": "TEST-033",
+      "path": "app/tests/test_sections.py",
+      "symbol": "GoldfishTests.test_review_input_numbers_the_range_and_names_the_standard_once",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-034",
+      "kind": "test",
+      "node_id": "TEST-035",
+      "path": "app/tests/test_agents.py",
+      "symbol": "SubmitTests.test_a_block_that_repeats_the_message_is_refused",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-035",
+      "kind": "test",
+      "node_id": "TEST-034",
+      "path": "app/tests/test_sections.py",
+      "symbol": "DesignTests.test_ask_owner_turns_the_section_into_a_question",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-036",
+      "kind": "code",
+      "node_id": "COMP-001",
+      "path": "app/aeion/server.py",
+      "symbol": "Handler",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-037",
+      "kind": "code",
+      "node_id": "COMP-001",
+      "path": "app/aeion/store.py",
+      "symbol": "Store.path",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-038",
+      "kind": "code",
+      "node_id": "COMP-001",
+      "path": "app/aeion/markdown.py",
+      "symbol": "render",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-039",
+      "kind": "code",
+      "node_id": "COMP-002",
+      "path": "app/aeion/agents.py",
+      "symbol": "Agents.run",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-040",
+      "kind": "code",
+      "node_id": "COMP-002",
+      "path": "app/aeion/agents.py",
+      "symbol": "Gateway.forward",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-041",
+      "kind": "code",
+      "node_id": "COMP-002",
+      "path": "app/aeion/agents.py",
+      "symbol": "Run.call",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-042",
+      "kind": "code",
+      "node_id": "COMP-003",
+      "path": "app/aeion/brainstorm.py",
+      "symbol": "turn",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-043",
+      "kind": "code",
+      "node_id": "COMP-003",
+      "path": "app/aeion/goldfish/__init__.py",
+      "symbol": "run",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-044",
+      "kind": "code",
+      "node_id": "COMP-003",
+      "path": "app/aeion/design.py",
+      "symbol": "resolve",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-045",
+      "kind": "code",
+      "node_id": "COMP-004",
+      "path": "app/aeion/specstudio.py",
+      "symbol": "draft",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-046",
+      "kind": "code",
+      "node_id": "COMP-004",
+      "path": "app/aeion/specstudio.py",
+      "symbol": "approve",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-047",
+      "kind": "code",
+      "node_id": "COMP-004",
+      "path": "app/aeion/specstudio.py",
+      "symbol": "export_issues",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-048",
+      "kind": "code",
+      "node_id": "COMP-005",
+      "path": "app/aeion/docshub.py",
+      "symbol": "Corpus.search",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-049",
+      "kind": "code",
+      "node_id": "COMP-005",
+      "path": "app/aeion/docshub.py",
+      "symbol": "Assistant.ask",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    },
+    {
+      "id": "BIND-050",
+      "kind": "code",
+      "node_id": "COMP-005",
+      "path": "app/aeion/docshub.py",
+      "symbol": "section_text",
+      "language": "python",
+      "expected_resolution": "must_resolve"
+    }
+  ],
+  "context_assets": []
+}

@@ -1,0 +1,44 @@
+{
+  "format": "aeion-observability-target/0.1",
+  "product": "aeion-autonomous-forum",
+  "manifest": "demo/forum/features/MANIFEST.json",
+  "architecture": "demo/forum/ARCHITECTURE.md",
+  "areas": [
+    "foundation",
+    "forum",
+    "moderation",
+    "agents",
+    "corpus",
+    "ops"
+  ],
+  "phases": [
+    "P0",
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "P5"
+  ],
+  "sizes": [
+    "S",
+    "M",
+    "L"
+  ],
+  "write_prefixes": [
+    "demo/forum-app/",
+    "demo/forum-web/",
+    "demo/forum-docs/",
+    "knowledge/components/"
+  ],
+  "default_write_paths": [
+    "demo/forum-app/",
+    "knowledge/components/agora-product.md",
+    "knowledge/components/factory-architecture.md"
+  ],
+  "delivery_steps": [
+    2,
+    4
+  ],
+  "delivery_max_chars": 220,
+  "superseded_stack": "FastAPI|pytest|extra=forbid|JavaScript.disabled|without JavaScript|no client framework"
+}

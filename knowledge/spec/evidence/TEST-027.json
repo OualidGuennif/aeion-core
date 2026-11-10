@@ -1,0 +1,34 @@
+{
+  "format": "aeion-test-receipt/0.1",
+  "test_id": "TEST-027",
+  "level": "unit",
+  "adapter": "unittest/3.0.0",
+  "python": "3.15.2",
+  "trust": "untrusted_local",
+  "bindings": [
+    {
+      "id": "BIND-027",
+      "path": "app/tests/test_engine.py",
+      "symbol": "MarkdownTests.test_a_rewritten_link_is_checked_before_rewriting"
+    }
+  ],
+  "bound_files": {
+    "app/tests/test_engine.py": "d46cc78a12ed30810b57f4ef5231f745fbce2ab78b46eb6b099ebfc9a0be7558"
+  },
+  "results": {
+    "app/tests/test_engine.py::MarkdownTests.test_a_rewritten_link_is_checked_before_rewriting": "pass"
+  },
+  "counts": {
+    "collected": 1,
+    "passed": 1,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "problems": [],
+  "status": "pass",
+  "spec_sha256": "18fa82886b67ff7b7f9ad273cbb40f012a139eb6d9a1d7ee2bfc6e23e91e64eb",
+  "source_tree_sha256": "956bb4b9cbe7fb5e0e154e9c365ddc76ff88a79625e4d9a6382090a478d14368",
+  "raw_output_sha256": "28fd1cc2f92f0b5f227030a3b3803a368bbf8522356822db7cc9f43b1118cf99",
+  "executed_at": "2026-11-10T15:21:31.189587+00:00"
+}

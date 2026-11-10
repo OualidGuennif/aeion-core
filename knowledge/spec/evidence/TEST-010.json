@@ -1,0 +1,34 @@
+{
+  "format": "aeion-test-receipt/0.1",
+  "test_id": "TEST-010",
+  "level": "unit",
+  "adapter": "unittest/3.0.0",
+  "python": "3.15.2",
+  "trust": "untrusted_local",
+  "bindings": [
+    {
+      "id": "BIND-010",
+      "path": "app/tests/test_sections.py",
+      "symbol": "GoldfishTests.test_a_reviewer_that_fails_twice_is_not_run"
+    }
+  ],
+  "bound_files": {
+    "app/tests/test_sections.py": "060ddefd77b5bcba05b623b462dc6d25cd358e08480e7ae228d162bd9d03a48a"
+  },
+  "results": {
+    "app/tests/test_sections.py::GoldfishTests.test_a_reviewer_that_fails_twice_is_not_run": "pass"
+  },
+  "counts": {
+    "collected": 1,
+    "passed": 1,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "problems": [],
+  "status": "pass",
+  "spec_sha256": "18fa82886b67ff7b7f9ad273cbb40f012a139eb6d9a1d7ee2bfc6e23e91e64eb",
+  "source_tree_sha256": "956bb4b9cbe7fb5e0e154e9c365ddc76ff88a79625e4d9a6382090a478d14368",
+  "raw_output_sha256": "11393debf9e84f738b8d3c5d228038ff8baa1bcd4618bda55d01d400d55499a3",
+  "executed_at": "2026-11-10T15:21:27.900704+00:00"
+}

@@ -1,0 +1,34 @@
+{
+  "format": "aeion-test-receipt/0.1",
+  "test_id": "TEST-004",
+  "level": "integration",
+  "adapter": "unittest/3.0.0",
+  "python": "3.15.2",
+  "trust": "untrusted_local",
+  "bindings": [
+    {
+      "id": "BIND-004",
+      "path": "app/tests/test_agents.py",
+      "symbol": "GatewayTests.test_the_key_never_appears_in_a_refusal"
+    }
+  ],
+  "bound_files": {
+    "app/tests/test_agents.py": "9a20d5ce43929ca6ac982979ce253c937b36b2f6d3830367f23eb2a0f19015bf"
+  },
+  "results": {
+    "app/tests/test_agents.py::GatewayTests.test_the_key_never_appears_in_a_refusal": "pass"
+  },
+  "counts": {
+    "collected": 1,
+    "passed": 1,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "problems": [],
+  "status": "pass",
+  "spec_sha256": "18fa82886b67ff7b7f9ad273cbb40f012a139eb6d9a1d7ee2bfc6e23e91e64eb",
+  "source_tree_sha256": "956bb4b9cbe7fb5e0e154e9c365ddc76ff88a79625e4d9a6382090a478d14368",
+  "raw_output_sha256": "49230f565548573c789646065fa8e09ddc7989214b159d0ef54bc90684ac5323",
+  "executed_at": "2026-11-10T15:21:27.420930+00:00"
+}

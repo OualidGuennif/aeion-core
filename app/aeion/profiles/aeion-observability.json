@@ -1,0 +1,33 @@
+{
+  "format": "aeion-export-profile/0.1",
+  "name": "aeion-observability-forum",
+  "max_bytes": 12000,
+  "frontmatter": {
+    "tier": 3,
+    "parallel": false,
+    "owner": "builder",
+    "status": "proposed",
+    "architecture": "quarkus-postgresql-react-web-v1",
+    "architecture_digest": "33e7246cc390bdacfbf8da5d7a0b2d7ff48b0774f1833155ac725cb519f06c2e"
+  },
+  "frontmatter_order": [
+    "id",
+    "sequence",
+    "title",
+    "area",
+    "size",
+    "parallel",
+    "phase",
+    "tier",
+    "write_paths",
+    "depends_on",
+    "owner",
+    "status",
+    "architecture",
+    "architecture_digest"
+  ],
+  "data_sources_text": "Frozen feature brief and merged dependency interfaces from [PLAN.md](../PLAN.md).\nThe approved [product architecture](../ARCHITECTURE.md) is Quarkus/Java + PostgreSQL +\nReact DOM/TypeScript web. Paths refer to the separate product repository, not Observability.\nContent and model output are untrusted. Canonical definition: the aeion-core AxiomSpec specification named under Intent.",
+  "outputs_text": "An artifact restricted to the declared write scopes, with checks and refusals described below.\nThe protected factory independently validates it; builder reports cannot certify completion.\nBackend tests use JUnit/Quarkus and disposable PostgreSQL; browser behavior uses the React\nproduction build. A previous SQLite/Expo receipt does not qualify this architecture.",
+  "invariants_text": "This invariant and the acceptance cases belong to planned protected check `agora-{id}`.\nThe supervisor freezes external acceptance before implementation; candidate code cannot change the verifier.",
+  "determinism_text": "Use explicit bounds, versioned inputs, a frozen clock and seed where relevant. Model-generated\nartifacts remain untrusted until checked; no model output grants runtime authority."
+}

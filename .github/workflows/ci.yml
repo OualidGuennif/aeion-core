@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+permissions:
+  contents: read
+
+jobs:
+  docs-gates:
+    name: Knowledge, links and repository health
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - run: ./tools/knowledge/knowledge-check
+      - name: AxiomSpec gate (structure, references, generated docs current)
+        run: ./tools/axiom/axiom check
+      - name: doc-links (with --diff on pull requests)
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          if [[ -n "$BASE_REF" ]]; then ./tools/knowledge/doc-links --diff "origin/$BASE_REF"; else ./tools/knowledge/doc-links; fi
+      - run: ./tools/repo-health/repo-health
+      - run: ./tools/factory-tests
+      - name: efficiency bundle is current
+        run: ./tools/efficiency/bundle && git diff --exit-code efficiency/efficiency-bundle.md
+
+  app-tests:
+    name: Application tests (Python, with the Flue harness)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6.5.0
+        with:
+          node-version: '22'
+      - name: Install the pinned agent harness (no install scripts)
+        working-directory: app/flue
+        run: npm ci --ignore-scripts --no-audit --no-fund
+      - run: python3 -m unittest discover -s app/tests -v
+
+  secret-scan:
+    runs-on: ubuntu-latest
+    # On a pull request the action lists the PR's commits through the API.
+    permissions:
+      contents: read
+      pull-requests: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@ff98106e4c7b2bc287b24eaf42907196329070c7 # v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  dependency-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: google/osv-scanner-action/osv-scanner-action@98b584ee2ed2da3935ccce10e06739d54cdcd20b # v2.0.0
+        with:
+          scan-args: --recursive ./
+
+  sast-scan:
+    runs-on: ubuntu-latest
+    container: semgrep/semgrep@sha256:451b3d875c00dac7ed5db5293e584a07de11449a409c10b3c2d2652f429630b6 # 1.182.1
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      # demo/ is a playground left out of release archives; only the shipped factory is scanned.
+      - run: semgrep scan --config p/owasp-top-ten --error --exclude demo
+# Keep action revisions pinned; review upstream changes before updating them.
